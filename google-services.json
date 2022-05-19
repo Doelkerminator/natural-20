@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "289205612177",
+    "project_id": "natural-20-dbb1f",
+    "storage_bucket": "natural-20-dbb1f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:289205612177:android:48f6b9a881bc461f509930",
+        "android_client_info": {
+          "package_name": "com.abysslight.natural20"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "289205612177-3mbg16sdhijeod63rmm09fqav6nh76f2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDm4XX0CA21xHKzNfjqlB9spEOqA71DMzs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "289205612177-3mbg16sdhijeod63rmm09fqav6nh76f2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
