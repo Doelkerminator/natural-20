@@ -30,48 +30,54 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               const SizedBox(height: 24),
               Image.asset("assets/logo.png", width: screenSizes.width / 1.5),
-              GoogleAuthButton(
-                onPressed: () async {
-                  User? user = await AuthenticatorGoogle.initSession(
-                    context: context
-                  );
-                  print(user?.displayName);
-                  Navigator.of(context).pushNamedAndRemoveUntil('/menu', (route) => false);
-                },
-                darkMode: true,
-                style: const AuthButtonStyle(
-                  buttonType: null,
-                  iconType: null,
-                ),
-              ),  
+              gAuthButton(),  
               _divider,
-              FacebookAuthButton(
-                onPressed: () async {
-                  User? user = await AuthenticatorFacebook.initSession(
-                    context: context
-                  );
-                  print(user?.displayName);
-                  Navigator.of(context).pushNamedAndRemoveUntil('/menu', (route) => false);
-                },
-                darkMode: true,
-                style: const AuthButtonStyle(
-                  buttonType: null,
-                  iconType: null,
-                ),
-              ),
+              fAuthButton(),
               _divider,
-              TwitterAuthButton(
-                onPressed: () {},
-                darkMode: true,
-                style: const AuthButtonStyle(
-                  buttonType: null,
-                  iconType: null,
-                ),
-              ),
+              tAuthButton(),
               _divider
             ]
           )
         )
+      )
+    );
+  }
+
+  Widget gAuthButton(){
+    return GoogleAuthButton(
+      onPressed: () async {
+        await AuthenticatorGoogle.initSession(context: context);
+        Navigator.of(context).pushNamedAndRemoveUntil('/menu', (route) => false);
+      },
+      darkMode: true,
+      style: const AuthButtonStyle(
+        buttonType: null,
+        iconType: null,
+      ),
+    );
+  }
+
+  Widget fAuthButton(){
+    return FacebookAuthButton(
+      onPressed: () async {
+        await AuthenticatorFacebook.initSession(context: context);
+        Navigator.of(context).pushNamedAndRemoveUntil('/menu', (route) => false);
+      },
+      darkMode: true,
+      style: const AuthButtonStyle(
+        buttonType: null,
+        iconType: null,
+      )
+    );
+  }
+
+  Widget tAuthButton(){
+    return TwitterAuthButton(
+      onPressed: () {},
+      darkMode: true,
+      style: const AuthButtonStyle(
+        buttonType: null,
+        iconType: null,
       )
     );
   }
