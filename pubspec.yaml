@@ -19,6 +19,9 @@ dependencies:
   firebase_storage: ^10.2.16
   splash_screen_view: ^3.0.0
   auth_buttons: ^2.0.4
+  google_sign_in: ^5.3.1
+  flutter_facebook_auth: ^4.3.4
+  http: ^0.13.4
 
 dev_dependencies:
   flutter_test:

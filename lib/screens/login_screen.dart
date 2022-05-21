@@ -1,5 +1,8 @@
 import 'package:auth_buttons/auth_buttons.dart';
 import 'package:flutter/material.dart';
+import 'package:natural_20/Auth/AuthenticatorFacebook.dart';
+import 'package:natural_20/Auth/AuthenticatorGoogle.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({ Key? key }) : super(key: key);
@@ -9,8 +12,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool isLoading = false;
-
   @override
   Widget build(BuildContext context) {
     var screenSizes = MediaQuery.of(context).size;
@@ -30,14 +31,14 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 24),
               Image.asset("assets/logo.png", width: screenSizes.width / 1.5),
               GoogleAuthButton(
-                onPressed: () {
-                  // your implementation
-                  setState(() {
-                    isLoading = !isLoading;
-                  });
+                onPressed: () async {
+                  User? user = await AuthenticatorGoogle.initSession(
+                    context: context
+                  );
+                  print(user?.displayName);
+                  Navigator.of(context).pushNamedAndRemoveUntil('/menu', (route) => false);
                 },
                 darkMode: true,
-                isLoading: isLoading,
                 style: const AuthButtonStyle(
                   buttonType: null,
                   iconType: null,
@@ -45,9 +46,14 @@ class _LoginScreenState extends State<LoginScreen> {
               ),  
               _divider,
               FacebookAuthButton(
-                onPressed: () {},
+                onPressed: () async {
+                  User? user = await AuthenticatorFacebook.initSession(
+                    context: context
+                  );
+                  print(user?.displayName);
+                  Navigator.of(context).pushNamedAndRemoveUntil('/menu', (route) => false);
+                },
                 darkMode: true,
-                isLoading: isLoading,
                 style: const AuthButtonStyle(
                   buttonType: null,
                   iconType: null,
@@ -57,12 +63,12 @@ class _LoginScreenState extends State<LoginScreen> {
               TwitterAuthButton(
                 onPressed: () {},
                 darkMode: true,
-                isLoading: isLoading,
                 style: const AuthButtonStyle(
                   buttonType: null,
                   iconType: null,
                 ),
-              )
+              ),
+              _divider
             ]
           )
         )
