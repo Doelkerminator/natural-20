@@ -1,11 +1,11 @@
-class UserModel{
+class User{
   String? email;
   String? name;
   String? photo;
   String? provider;
   String? uid;
 
-  UserModel({
+  User({
     this.email,
     this.name,
     this.photo,
@@ -13,11 +13,11 @@ class UserModel{
     this.uid
   });
 
-  factory UserModel.fromMap(Map<String, dynamic> map){
-    return UserModel(
+  factory User.fromMap(Map<String, dynamic> map){
+    return User(
       email: map['email'],
       name: map['name'],
-      photo: map['photo'],
+      photo: map['photo'] ?? "Not image",
       provider: map['provider'],
       uid: map['uid'],
     );

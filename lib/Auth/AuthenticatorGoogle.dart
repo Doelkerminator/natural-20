@@ -53,7 +53,7 @@ class AuthenticatorGoogle{
       "photo": user.photoURL,
       "provider": user.providerData[0].providerId,
       "uid": user.uid,
-      "characters": {}
+      "characters": []
     });
   }
 }

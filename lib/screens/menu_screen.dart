@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:natural_20/screens/campaign_screen.dart';
 import 'package:natural_20/views/drawer_view.dart';
 
 class MenuScreen extends StatefulWidget {
@@ -42,7 +43,9 @@ class _MenuScreenState extends State<MenuScreen> {
       children: [
         TextButton(child: Text("Enciclopedia"), onPressed: () {}),
         TextButton(child: Text("Personajes"), onPressed: () {}),
-        TextButton(child: Text("Partida"), onPressed: () {}),
+        TextButton(child: Text("Partida"), onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const CampaignScreen()));
+        }),
         TextButton(child: Text("Dado"), onPressed: () {}),
         TextButton(child: Text("Ei"), onPressed: () {})
       ]
