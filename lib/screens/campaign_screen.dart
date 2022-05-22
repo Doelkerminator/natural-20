@@ -25,7 +25,7 @@ class _CampaignScreenState extends State<CampaignScreen> {
               floating: true,
               leading: IconButton(onPressed: (){ Navigator.pop(context); }, icon: Icon(Icons.arrow_back, color: SettingsColor.textColor)),
               actions: [IconButton(onPressed: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => const AddCampaignScreen())); }, icon: Icon(Icons.add, color: SettingsColor.textColor))],
-              title: Text('SliverAppBar'),
+              title: const Text('Campañas'),
               backgroundColor: Colors.green,
               expandedHeight: 200.0,
               flexibleSpace: FlexibleSpaceBar(background: Image.asset('assets/campaignImage.jpg', fit: BoxFit.cover))

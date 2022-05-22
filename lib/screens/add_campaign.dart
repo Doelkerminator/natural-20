@@ -1,78 +1,297 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:intl/intl.dart';
 
 class AddCampaignScreen extends StatelessWidget {
-  const AddCampaignScreen({ Key? key }) : super(key: key);
+  const AddCampaignScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    const appTitle = 'Form Validation Demo';
-
     return MaterialApp(
-      title: appTitle,
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text(appTitle),
-        ),
-        body: const MyCustomForm(),
-      ),
+      title: 'Flutter FormBuilder Demo',
+      debugShowCheckedModeBanner: false,
+      localizationsDelegates: const [
+        FormBuilderLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: FormBuilderLocalizations.delegate.supportedLocales,
+      home: const CompleteForm(),
     );
   }
 }
 
-// Create a Form widget.
-class MyCustomForm extends StatefulWidget {
-  const MyCustomForm({ Key? key }) : super(key: key);
+class CompleteForm extends StatefulWidget {
+  const CompleteForm({Key? key}) : super(key: key);
 
   @override
-  MyCustomFormState createState() {
-    return MyCustomFormState();
+  CompleteFormState createState() {
+    return CompleteFormState();
   }
 }
 
-// Create a corresponding State class.
-// This class holds data related to the form.
-class MyCustomFormState extends State<MyCustomForm> {
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
-  //
-  // Note: This is a GlobalKey<FormState>,
-  // not a GlobalKey<MyCustomFormState>.
-  final _formKey = GlobalKey<FormState>();
+class CompleteFormState extends State<CompleteForm> {
+  bool autoValidate = true;
+  bool readOnly = false;
+  bool showSegmentedControl = true;
+  final _formKey = GlobalKey<FormBuilderState>();
+  bool _ageHasError = false;
+  bool _genderHasError = false;
+
+  var genderOptions = ['Male', 'Female', 'Other'];
+
+  void _onChanged(dynamic val) => debugPrint(val.toString());
 
   @override
   Widget build(BuildContext context) {
-    // Build a Form widget using the _formKey created above.
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextFormField(
-            // The validator receives the text that the user has entered.
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
+    return Scaffold(
+      appBar: AppBar(title: const Text('Form Builder Example')),
+      body: Padding(
+        padding: const EdgeInsets.all(10),
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              FormBuilder(
+                key: _formKey,
+                // enabled: false,
+                autovalidateMode: AutovalidateMode.disabled,
+                initialValue: const {
+                  'movie_rating': 5,
+                  'best_language': 'Dart',
+                  'age': '13',
+                  'gender': 'Male'
+                },
+                skipDisabled: true,
+                child: Column(
+                  children: <Widget>[
+                    const SizedBox(height: 15),
+                    FormBuilderSlider(
+                      name: 'slider',
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.min(6),
+                      ]),
+                      onChanged: _onChanged,
+                      min: 0.0,
+                      max: 10.0,
+                      initialValue: 7.0,
+                      divisions: 20,
+                      activeColor: Colors.red,
+                      inactiveColor: Colors.pink[100],
+                      decoration: const InputDecoration(
+                        labelText: 'Number of things',
+                      ),
+                    ),
+                    FormBuilderRangeSlider(
+                      name: 'range_slider',
+                      // validator: FormBuilderValidators.compose([FormBuilderValidators.min(context, 6)]),
+                      onChanged: _onChanged,
+                      min: 0.0,
+                      max: 100.0,
+                      initialValue: const RangeValues(4, 7),
+                      divisions: 20,
+                      activeColor: Colors.red,
+                      inactiveColor: Colors.pink[100],
+                      decoration:
+                          const InputDecoration(labelText: 'Price Range'),
+                    ),
+                    FormBuilderCheckbox(
+                      name: 'accept_terms',
+                      initialValue: false,
+                      onChanged: _onChanged,
+                      title: RichText(
+                        text: const TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'I have read and agree to the ',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            TextSpan(
+                              text: 'Terms and Conditions',
+                              style: TextStyle(color: Colors.blue),
+                              // Flutter doesn't allow a button inside a button
+                              // https://github.com/flutter/flutter/issues/31437#issuecomment-492411086
+                              /*
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  print('launch url');
+                                },
+                              */
+                            ),
+                          ],
+                        ),
+                      ),
+                      validator: FormBuilderValidators.equal(
+                        true,
+                        errorText:
+                            'You must accept terms and conditions to continue',
+                      ),
+                    ),
+                    FormBuilderTextField(
+                      autovalidateMode: AutovalidateMode.always,
+                      name: 'age',
+                      decoration: InputDecoration(
+                        labelText: 'Age',
+                        suffixIcon: _ageHasError
+                            ? const Icon(Icons.error, color: Colors.red)
+                            : const Icon(Icons.check, color: Colors.green),
+                      ),
+                      onChanged: (val) {
+                        setState(() {
+                          _ageHasError = !(_formKey.currentState?.fields['age']
+                                  ?.validate() ??
+                              false);
+                        });
+                      },
+                      // valueTransformer: (text) => num.tryParse(text),
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(),
+                        FormBuilderValidators.numeric(),
+                        FormBuilderValidators.max(70),
+                      ]),
+                      // initialValue: '12',
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                    ),
+                    FormBuilderDropdown<String>(
+                      // autovalidate: true,
+                      name: 'gender',
+                      decoration: InputDecoration(
+                        labelText: 'Gender',
+                        suffix: _genderHasError
+                            ? const Icon(Icons.error)
+                            : const Icon(Icons.check),
+                      ),
+                      // initialValue: 'Male',
+                      allowClear: true,
+                      hint: const Text('Select Gender'),
+                      validator: FormBuilderValidators.compose(
+                          [FormBuilderValidators.required()]),
+                      items: genderOptions
+                          .map((gender) => DropdownMenuItem(
+                                alignment: AlignmentDirectional.center,
+                                value: gender,
+                                child: Text(gender),
+                              ))
+                          .toList(),
+                      onChanged: (val) {
+                        setState(() {
+                          _genderHasError = !(_formKey
+                                  .currentState?.fields['gender']
+                                  ?.validate() ??
+                              false);
+                        });
+                      },
+                      valueTransformer: (val) => val?.toString(),
+                    ),
+                    FormBuilderRadioGroup<String>(
+                      decoration: const InputDecoration(
+                        labelText: 'My chosen language',
+                      ),
+                      initialValue: null,
+                      name: 'best_language',
+                      onChanged: _onChanged,
+                      validator: FormBuilderValidators.compose(
+                          [FormBuilderValidators.required()]),
+                      options:
+                          ['Dart', 'Kotlin', 'Java', 'Swift', 'Objective-C']
+                              .map((lang) => FormBuilderFieldOption(
+                                    value: lang,
+                                    child: Text(lang),
+                                  ))
+                              .toList(growable: false),
+                      controlAffinity: ControlAffinity.trailing,
+                    ),
+                    FormBuilderSegmentedControl(
+                      decoration: const InputDecoration(
+                        labelText: 'Movie Rating (Archer)',
+                      ),
+                      name: 'movie_rating',
+                      // initialValue: 1,
+                      // textStyle: TextStyle(fontWeight: FontWeight.bold),
+                      options: List.generate(5, (i) => i + 1)
+                          .map((number) => FormBuilderFieldOption(
+                                value: number,
+                                child: Text(
+                                  number.toString(),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ))
+                          .toList(),
+                      onChanged: _onChanged,
+                    ),
+                    FormBuilderSwitch(
+                      title: const Text('I Accept the terms and conditions'),
+                      name: 'accept_terms_switch',
+                      initialValue: true,
+                      onChanged: _onChanged,
+                    ),
+                    FormBuilderCheckboxGroup<String>(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      decoration: const InputDecoration(
+                          labelText: 'The language of my people'),
+                      name: 'languages',
+                      // initialValue: const ['Dart'],
+                      options: const [
+                        FormBuilderFieldOption(value: 'Dart'),
+                        FormBuilderFieldOption(value: 'Kotlin'),
+                        FormBuilderFieldOption(value: 'Java'),
+                        FormBuilderFieldOption(value: 'Swift'),
+                        FormBuilderFieldOption(value: 'Objective-C'),
+                      ],
+                      onChanged: _onChanged,
+                      separator: const VerticalDivider(
+                        width: 10,
+                        thickness: 5,
+                        color: Colors.red,
+                      ),
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.minLength(1),
+                        FormBuilderValidators.maxLength(3),
+                      ]),
+                    ),
+                  ],
+                ),
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState?.saveAndValidate() ?? false) {
+                          debugPrint(_formKey.currentState?.value.toString());
+                        } else {
+                          debugPrint(_formKey.currentState?.value.toString());
+                          debugPrint('validation failed');
+                        }
+                      },
+                      child: const Text(
+                        'Submit',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {
+                        _formKey.currentState?.reset();
+                      },
+                      // color: Theme.of(context).colorScheme.secondary,
+                      child: Text(
+                        'Reset',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: ElevatedButton(
-              onPressed: () {
-                // Validate returns true if the form is valid, or false otherwise.
-                if (_formKey.currentState!.validate()) {
-                  // If the form is valid, display a snackbar. In the real world,
-                  // you'd often call a server or save the information in a database.
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Processing Data')),
-                  );
-                }
-              },
-              child: const Text('Submit'),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
