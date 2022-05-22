@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -16,13 +17,38 @@ class AuthenticatorFacebook{
         final AuthCredential facebookCredential = FacebookAuthProvider.credential(result.accessToken!.token);
         final userCredential = await FirebaseAuth.instance.signInWithCredential(facebookCredential);
         user = userCredential.user;
+        if(!await checkIfDocExists(user!.uid)){
+          await createUser(user);
+        }
         return user;
-      }catch(e){}
-    } catch (e) {}
+      }catch(e){ return null; }
+    } catch (e) { return null; }
   }
 
   static Future<void> closeSession() async {
     await FacebookAuth.instance.logOut(); 
     await FirebaseAuth.instance.signOut();
+  }
+
+  static Future<bool> checkIfDocExists(String docId) async {
+    try {
+      CollectionReference collection = FirebaseFirestore.instance.collection('usuarios');
+      var doc = await collection.doc(docId).get();
+      return doc.exists;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  static Future<void> createUser(User user) async {
+    CollectionReference newUser = FirebaseFirestore.instance.collection('usuarios');
+    await newUser.doc(user.uid).set({
+      "name": user.displayName,
+      "email": user.email,
+      "photo": user.photoURL,
+      "provider": user.providerData[0].providerId,
+      "uid": user.uid,
+      "characters": {}
+    });
   }
 }

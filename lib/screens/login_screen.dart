@@ -2,7 +2,7 @@ import 'package:auth_buttons/auth_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:natural_20/Auth/AuthenticatorFacebook.dart';
 import 'package:natural_20/Auth/AuthenticatorGoogle.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:natural_20/screens/menu_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({ Key? key }) : super(key: key);
@@ -46,8 +46,10 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget gAuthButton(){
     return GoogleAuthButton(
       onPressed: () async {
-        await AuthenticatorGoogle.initSession(context: context);
-        Navigator.of(context).pushNamedAndRemoveUntil('/menu', (route) => false);
+        if(await AuthenticatorGoogle.initSession(context: context) != null){
+          Navigator.pushAndRemoveUntil(context, 
+                MaterialPageRoute(builder: (context) => const MenuScreen()), (route) => false);
+        }
       },
       darkMode: true,
       style: const AuthButtonStyle(
@@ -60,8 +62,10 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget fAuthButton(){
     return FacebookAuthButton(
       onPressed: () async {
-        await AuthenticatorFacebook.initSession(context: context);
-        Navigator.of(context).pushNamedAndRemoveUntil('/menu', (route) => false);
+        if(await AuthenticatorFacebook.initSession(context: context) != null){
+          Navigator.pushAndRemoveUntil(context, 
+                MaterialPageRoute(builder: (context) => const MenuScreen()), (route) => false);
+        }
       },
       darkMode: true,
       style: const AuthButtonStyle(
