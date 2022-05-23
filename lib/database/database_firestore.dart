@@ -28,6 +28,8 @@ class DatabaseFirestore{
     CollectionReference newCampaign =
     FirebaseFirestore.instance.collection('campania');
     User? user = FirebaseAuth.instance.currentUser;
+    print(urlImage);
+    print("kkkkk");
     await newCampaign.doc().set({
       "name": nameCampaign,
       "detail": detailsCampaign,

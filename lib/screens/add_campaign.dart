@@ -24,7 +24,11 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
       home: Scaffold(
           appBar: AppBar(
             title: const Text('Crear Campaña'),
-            leading: IconButton(onPressed: () { Navigator.pop(context); }, icon: Icon(Icons.arrow_back, color: SettingsColor.textColor)),
+            leading: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: Icon(Icons.arrow_back, color: SettingsColor.textColor)),
           ),
           body: formAddCampaign()),
     );
@@ -34,38 +38,39 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
     return Form(
         key: _formKey,
         child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: SingleChildScrollView(
-            child: Column(children: [
+            padding: const EdgeInsets.all(10),
+            child: SingleChildScrollView(
+                child: Column(children: [
               txtFormFieldNameCampaign(),
               const SizedBox(height: 20),
               txtFormFieldDetailsCampaign(),
               const SizedBox(height: 20),
               pickedFile != null ? imageSelected() : Container(),
               const SizedBox(height: 20),
-              ElevatedButton(onPressed: selectImage, child: const Text("Seleccionar Imagen")),
+              ElevatedButton(
+                  onPressed: selectImage,
+                  child: const Text("Seleccionar Imagen")),
               const SizedBox(height: 20),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      uploadImage().then((String value){
-                        setState(() {
-                          urlImage = value;
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        uploadImage().then((String value) {
+                          setState(() {
+                            urlImage = value;
+                          });
                         });
-                      });
-                      DatabaseFirestore.createCampaign(urlImage, txtNameController.text, txtDetailsController.text);
-                    }
-                  },
-                  child: const Text('Enviar'),
-                )
-              )
-            ]
-          )
-        )
-      )
-    );
+                        
+                        DatabaseFirestore.createCampaign(urlImage,
+                            txtNameController.text, txtDetailsController.text);
+                      }
+                    },
+                    child: const Text('Enviar'),
+                  )),
+              const SizedBox(height: 20),
+              buildProgress()
+            ]))));
   }
 
   Widget txtFormFieldNameCampaign() {
@@ -150,17 +155,15 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
         } else {
           return const SizedBox(height: 50);
         }
-      }
-    );
+      });
 
   Widget imageSelected() {
     return SizedBox(
-      width: MediaQuery.of(context).size.width / 1.5,
-      child: Image.file(
-        File(pickedFile!.path!),
         width: MediaQuery.of(context).size.width / 1.5,
-        fit: BoxFit.cover,
-      )
-    );
+        child: Image.file(
+          File(pickedFile!.path!),
+          width: MediaQuery.of(context).size.width / 1.5,
+          fit: BoxFit.cover,
+        ));
   }
 }
