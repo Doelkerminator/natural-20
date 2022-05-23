@@ -3,7 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:natural_20/database/database_firestore.dart';
-import '../settings/settings_color.dart';
+import 'package:natural_20/settings/settings_color.dart';
 
 class AddCampaignScreen extends StatefulWidget {
   const AddCampaignScreen({Key? key}) : super(key: key);
@@ -12,7 +12,6 @@ class AddCampaignScreen extends StatefulWidget {
 }
 
 class _AddCampaignScreenState extends State<AddCampaignScreen> {
-  String urlImage = "";
   PlatformFile? pickedFile;
   UploadTask? uploadTask;
   var txtNameController = TextEditingController();
@@ -35,6 +34,7 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
   }
 
   Widget formAddCampaign() {
+    String urlImage = "";
     return Form(
         key: _formKey,
         child: Padding(
@@ -54,14 +54,10 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
               Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        uploadImage().then((String value) {
-                          setState(() {
-                            urlImage = value;
-                          });
-                        });
-                        
+                        urlImage = await uploadImage();
+                        print(urlImage);
                         DatabaseFirestore.createCampaign(urlImage,
                             txtNameController.text, txtDetailsController.text);
                       }
@@ -146,7 +142,7 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
                   color: Colors.green,
                 ),
                 Center(
-                  child: Text('${100 * progress}.roundToDouble()}%',
+                  child: Text('${progress * 100}%',
                       style: const TextStyle(color: Colors.white)),
                 )
               ],

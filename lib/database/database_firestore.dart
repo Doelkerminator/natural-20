@@ -28,8 +28,6 @@ class DatabaseFirestore{
     CollectionReference newCampaign =
     FirebaseFirestore.instance.collection('campania');
     User? user = FirebaseAuth.instance.currentUser;
-    print(urlImage);
-    print("kkkkk");
     await newCampaign.doc().set({
       "name": nameCampaign,
       "detail": detailsCampaign,
@@ -42,5 +40,12 @@ class DatabaseFirestore{
         "uid": user?.uid,
       }
     });
+  }
+
+  static Future<void> getAllCampaigns() async {
+    CollectionReference campaigns = FirebaseFirestore.instance.collection('campania');
+    QuerySnapshot querySnapshot = await campaigns.get();
+    final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+    print(allData);
   }
 }
