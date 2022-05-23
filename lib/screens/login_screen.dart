@@ -16,28 +16,22 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     var screenSizes = MediaQuery.of(context).size;
     Divider _divider = const Divider(height: 10);
-    return MaterialApp(
-      themeMode: ThemeMode.dark,
-      darkTheme: ThemeData(
-        brightness: Brightness.dark
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Natural 20")
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text("Natural 20")
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(height: 24),
-              Image.asset("assets/logo.png", width: screenSizes.width / 1.5),
-              gAuthButton(),  
-              _divider,
-              fAuthButton(),
-              _divider,
-              tAuthButton(),
-              _divider
-            ]
-          )
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 24),
+            Image.asset("assets/logo.png", width: screenSizes.width / 1.5),
+            gAuthButton(),  
+            _divider,
+            fAuthButton(),
+            _divider,
+            tAuthButton(),
+            _divider
+          ]
         )
       )
     );
@@ -47,8 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return GoogleAuthButton(
       onPressed: () async {
         if(await AuthenticatorGoogle.initSession(context: context) != null){
-          Navigator.pushAndRemoveUntil(context, 
-                MaterialPageRoute(builder: (context) => const MenuScreen()), (route) => false);
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const MenuScreen()));
         }
       },
       darkMode: true,
@@ -63,8 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return FacebookAuthButton(
       onPressed: () async {
         if(await AuthenticatorFacebook.initSession(context: context) != null){
-          Navigator.pushAndRemoveUntil(context, 
-                MaterialPageRoute(builder: (context) => const MenuScreen()), (route) => false);
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const MenuScreen()));
         }
       },
       darkMode: true,

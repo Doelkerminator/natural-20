@@ -25,6 +25,7 @@ dependencies:
   animated_radial_menu: ^0.0.1
   flutter_form_builder: 7.2.0
   form_builder_validators: ^8.1.1
+  file_picker: ^4.5.1
 
 dev_dependencies:
   flutter_test:

@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:natural_20/database/database_firestore.dart';
 
 class AuthenticatorFacebook{
   static Future<User?> initSession({required BuildContext context}) async {
@@ -17,8 +18,8 @@ class AuthenticatorFacebook{
         final AuthCredential facebookCredential = FacebookAuthProvider.credential(result.accessToken!.token);
         final userCredential = await FirebaseAuth.instance.signInWithCredential(facebookCredential);
         user = userCredential.user;
-        if(!await checkIfDocExists(user!.uid)){
-          await createUser(user);
+        if(!await DatabaseFirestore.checkIfDocExists(user!.uid)){
+          await DatabaseFirestore.createUser(user);
         }
         return user;
       }catch(e){ return null; }
@@ -28,27 +29,5 @@ class AuthenticatorFacebook{
   static Future<void> closeSession() async {
     await FacebookAuth.instance.logOut(); 
     await FirebaseAuth.instance.signOut();
-  }
-
-  static Future<bool> checkIfDocExists(String docId) async {
-    try {
-      CollectionReference collection = FirebaseFirestore.instance.collection('usuarios');
-      var doc = await collection.doc(docId).get();
-      return doc.exists;
-    } catch (e) {
-      throw e;
-    }
-  }
-
-  static Future<void> createUser(User user) async {
-    CollectionReference newUser = FirebaseFirestore.instance.collection('usuarios');
-    await newUser.doc(user.uid).set({
-      "name": user.displayName,
-      "email": user.email,
-      "photo": user.photoURL,
-      "provider": user.providerData[0].providerId,
-      "uid": user.uid,
-      "characters": []
-    });
   }
 }

@@ -1,298 +1,166 @@
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:intl/intl.dart';
+import 'package:natural_20/database/database_firestore.dart';
+import '../settings/settings_color.dart';
 
-class AddCampaignScreen extends StatelessWidget {
+class AddCampaignScreen extends StatefulWidget {
   const AddCampaignScreen({Key? key}) : super(key: key);
+  @override
+  State<AddCampaignScreen> createState() => _AddCampaignScreenState();
+}
 
+class _AddCampaignScreenState extends State<AddCampaignScreen> {
+  String urlImage = "";
+  PlatformFile? pickedFile;
+  UploadTask? uploadTask;
+  var txtNameController = TextEditingController();
+  var txtDetailsController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter FormBuilder Demo',
-      debugShowCheckedModeBanner: false,
-      localizationsDelegates: const [
-        FormBuilderLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: FormBuilderLocalizations.delegate.supportedLocales,
-      home: const CompleteForm(),
+      home: Scaffold(
+          appBar: AppBar(
+            title: const Text('Crear Campaña'),
+            leading: IconButton(onPressed: () { Navigator.pop(context); }, icon: Icon(Icons.arrow_back, color: SettingsColor.textColor)),
+          ),
+          body: formAddCampaign()),
     );
   }
-}
 
-class CompleteForm extends StatefulWidget {
-  const CompleteForm({Key? key}) : super(key: key);
-
-  @override
-  CompleteFormState createState() {
-    return CompleteFormState();
+  Widget formAddCampaign() {
+    return Form(
+        key: _formKey,
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: SingleChildScrollView(
+            child: Column(children: [
+              txtFormFieldNameCampaign(),
+              const SizedBox(height: 20),
+              txtFormFieldDetailsCampaign(),
+              const SizedBox(height: 20),
+              pickedFile != null ? imageSelected() : Container(),
+              const SizedBox(height: 20),
+              ElevatedButton(onPressed: selectImage, child: const Text("Seleccionar Imagen")),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      uploadImage().then((String value){
+                        setState(() {
+                          urlImage = value;
+                        });
+                      });
+                      DatabaseFirestore.createCampaign(urlImage, txtNameController.text, txtDetailsController.text);
+                    }
+                  },
+                  child: const Text('Enviar'),
+                )
+              )
+            ]
+          )
+        )
+      )
+    );
   }
-}
 
-class CompleteFormState extends State<CompleteForm> {
-  bool autoValidate = true;
-  bool readOnly = false;
-  bool showSegmentedControl = true;
-  final _formKey = GlobalKey<FormBuilderState>();
-  bool _ageHasError = false;
-  bool _genderHasError = false;
-
-  var genderOptions = ['Male', 'Female', 'Other'];
-
-  void _onChanged(dynamic val) => debugPrint(val.toString());
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Form Builder Example')),
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              FormBuilder(
-                key: _formKey,
-                // enabled: false,
-                autovalidateMode: AutovalidateMode.disabled,
-                initialValue: const {
-                  'movie_rating': 5,
-                  'best_language': 'Dart',
-                  'age': '13',
-                  'gender': 'Male'
-                },
-                skipDisabled: true,
-                child: Column(
-                  children: <Widget>[
-                    const SizedBox(height: 15),
-                    FormBuilderSlider(
-                      name: 'slider',
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.min(6),
-                      ]),
-                      onChanged: _onChanged,
-                      min: 0.0,
-                      max: 10.0,
-                      initialValue: 7.0,
-                      divisions: 20,
-                      activeColor: Colors.red,
-                      inactiveColor: Colors.pink[100],
-                      decoration: const InputDecoration(
-                        labelText: 'Number of things',
-                      ),
-                    ),
-                    FormBuilderRangeSlider(
-                      name: 'range_slider',
-                      // validator: FormBuilderValidators.compose([FormBuilderValidators.min(context, 6)]),
-                      onChanged: _onChanged,
-                      min: 0.0,
-                      max: 100.0,
-                      initialValue: const RangeValues(4, 7),
-                      divisions: 20,
-                      activeColor: Colors.red,
-                      inactiveColor: Colors.pink[100],
-                      decoration:
-                          const InputDecoration(labelText: 'Price Range'),
-                    ),
-                    FormBuilderCheckbox(
-                      name: 'accept_terms',
-                      initialValue: false,
-                      onChanged: _onChanged,
-                      title: RichText(
-                        text: const TextSpan(
-                          children: [
-                            TextSpan(
-                              text: 'I have read and agree to the ',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            TextSpan(
-                              text: 'Terms and Conditions',
-                              style: TextStyle(color: Colors.blue),
-                              // Flutter doesn't allow a button inside a button
-                              // https://github.com/flutter/flutter/issues/31437#issuecomment-492411086
-                              /*
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  print('launch url');
-                                },
-                              */
-                            ),
-                          ],
-                        ),
-                      ),
-                      validator: FormBuilderValidators.equal(
-                        true,
-                        errorText:
-                            'You must accept terms and conditions to continue',
-                      ),
-                    ),
-                    FormBuilderTextField(
-                      autovalidateMode: AutovalidateMode.always,
-                      name: 'age',
-                      decoration: InputDecoration(
-                        labelText: 'Age',
-                        suffixIcon: _ageHasError
-                            ? const Icon(Icons.error, color: Colors.red)
-                            : const Icon(Icons.check, color: Colors.green),
-                      ),
-                      onChanged: (val) {
-                        setState(() {
-                          _ageHasError = !(_formKey.currentState?.fields['age']
-                                  ?.validate() ??
-                              false);
-                        });
-                      },
-                      // valueTransformer: (text) => num.tryParse(text),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
-                        FormBuilderValidators.numeric(),
-                        FormBuilderValidators.max(70),
-                      ]),
-                      // initialValue: '12',
-                      keyboardType: TextInputType.number,
-                      textInputAction: TextInputAction.next,
-                    ),
-                    FormBuilderDropdown<String>(
-                      // autovalidate: true,
-                      name: 'gender',
-                      decoration: InputDecoration(
-                        labelText: 'Gender',
-                        suffix: _genderHasError
-                            ? const Icon(Icons.error)
-                            : const Icon(Icons.check),
-                      ),
-                      // initialValue: 'Male',
-                      allowClear: true,
-                      hint: const Text('Select Gender'),
-                      validator: FormBuilderValidators.compose(
-                          [FormBuilderValidators.required()]),
-                      items: genderOptions
-                          .map((gender) => DropdownMenuItem(
-                                alignment: AlignmentDirectional.center,
-                                value: gender,
-                                child: Text(gender),
-                              ))
-                          .toList(),
-                      onChanged: (val) {
-                        setState(() {
-                          _genderHasError = !(_formKey
-                                  .currentState?.fields['gender']
-                                  ?.validate() ??
-                              false);
-                        });
-                      },
-                      valueTransformer: (val) => val?.toString(),
-                    ),
-                    FormBuilderRadioGroup<String>(
-                      decoration: const InputDecoration(
-                        labelText: 'My chosen language',
-                      ),
-                      initialValue: null,
-                      name: 'best_language',
-                      onChanged: _onChanged,
-                      validator: FormBuilderValidators.compose(
-                          [FormBuilderValidators.required()]),
-                      options:
-                          ['Dart', 'Kotlin', 'Java', 'Swift', 'Objective-C']
-                              .map((lang) => FormBuilderFieldOption(
-                                    value: lang,
-                                    child: Text(lang),
-                                  ))
-                              .toList(growable: false),
-                      controlAffinity: ControlAffinity.trailing,
-                    ),
-                    FormBuilderSegmentedControl(
-                      decoration: const InputDecoration(
-                        labelText: 'Movie Rating (Archer)',
-                      ),
-                      name: 'movie_rating',
-                      // initialValue: 1,
-                      // textStyle: TextStyle(fontWeight: FontWeight.bold),
-                      options: List.generate(5, (i) => i + 1)
-                          .map((number) => FormBuilderFieldOption(
-                                value: number,
-                                child: Text(
-                                  number.toString(),
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ))
-                          .toList(),
-                      onChanged: _onChanged,
-                    ),
-                    FormBuilderSwitch(
-                      title: const Text('I Accept the terms and conditions'),
-                      name: 'accept_terms_switch',
-                      initialValue: true,
-                      onChanged: _onChanged,
-                    ),
-                    FormBuilderCheckboxGroup<String>(
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      decoration: const InputDecoration(
-                          labelText: 'The language of my people'),
-                      name: 'languages',
-                      // initialValue: const ['Dart'],
-                      options: const [
-                        FormBuilderFieldOption(value: 'Dart'),
-                        FormBuilderFieldOption(value: 'Kotlin'),
-                        FormBuilderFieldOption(value: 'Java'),
-                        FormBuilderFieldOption(value: 'Swift'),
-                        FormBuilderFieldOption(value: 'Objective-C'),
-                      ],
-                      onChanged: _onChanged,
-                      separator: const VerticalDivider(
-                        width: 10,
-                        thickness: 5,
-                        color: Colors.red,
-                      ),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.minLength(1),
-                        FormBuilderValidators.maxLength(3),
-                      ]),
-                    ),
-                  ],
-                ),
-              ),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState?.saveAndValidate() ?? false) {
-                          debugPrint(_formKey.currentState?.value.toString());
-                        } else {
-                          debugPrint(_formKey.currentState?.value.toString());
-                          debugPrint('validation failed');
-                        }
-                      },
-                      child: const Text(
-                        'Submit',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        _formKey.currentState?.reset();
-                      },
-                      // color: Theme.of(context).colorScheme.secondary,
-                      child: Text(
-                        'Reset',
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+  Widget txtFormFieldNameCampaign() {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      controller: txtNameController,
+      decoration: const InputDecoration(
+        labelText: 'Nombre de la Campaña',
       ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Este campo no debe de estar vacío.';
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget txtFormFieldDetailsCampaign() {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      controller: txtDetailsController,
+      maxLines: 8,
+      decoration: const InputDecoration(
+        labelText: 'Descripción de la campaña',
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Este campo no debe de estar vacío.';
+        }
+        return null;
+      },
+    );
+  }
+
+  Future selectImage() async {
+    final result = await FilePicker.platform.pickFiles();
+    if (result == null) return;
+    setState(() {
+      pickedFile = result.files.first;
+    });
+  }
+
+  Future<String> uploadImage() async {
+    final path = 'imagesCampaign/${pickedFile!.name}';
+    final file = File(pickedFile!.path!);
+    final ref = FirebaseStorage.instance.ref().child(path);
+    setState(() {
+      uploadTask = ref.putFile(file);
+    });
+    final snapshot = await uploadTask!.whenComplete(() {});
+    final urlImage = await snapshot.ref.getDownloadURL();
+    setState(() {
+      uploadTask = null;
+    });
+    return urlImage;
+  }
+
+  Widget buildProgress() => StreamBuilder<TaskSnapshot>(
+      stream: uploadTask?.snapshotEvents,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final data = snapshot.data!;
+          double progress = data.bytesTransferred / data.totalBytes;
+          return SizedBox(
+            height: 50,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                LinearProgressIndicator(
+                  value: progress,
+                  backgroundColor: Colors.grey,
+                  color: Colors.green,
+                ),
+                Center(
+                  child: Text('${100 * progress}.roundToDouble()}%',
+                      style: const TextStyle(color: Colors.white)),
+                )
+              ],
+            ),
+          );
+        } else {
+          return const SizedBox(height: 50);
+        }
+      }
+    );
+
+  Widget imageSelected() {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width / 1.5,
+      child: Image.file(
+        File(pickedFile!.path!),
+        width: MediaQuery.of(context).size.width / 1.5,
+        fit: BoxFit.cover,
+      )
     );
   }
 }
