@@ -14,7 +14,6 @@ class _MenuScreenState extends State<MenuScreen> {
   Widget build(BuildContext context) {
     var screenSizes = MediaQuery.of(context).size;
     return Scaffold(
-        appBar: AppBar(title: const Text('Menú Principal')),
         drawer: const DrawerView(),
         body: SingleChildScrollView(
             child: Center(
@@ -28,7 +27,12 @@ class _MenuScreenState extends State<MenuScreen> {
 
   Widget radial() {
     return Column(children: [
-      TextButton(child: Text("Enciclopedia"), onPressed: () {}),
+      TextButton(
+        child: const Text("Enciclopedia"),
+        onPressed: () {
+          Navigator.pushNamed(context, '/encyclopedia');
+        }
+      ),
       TextButton(child: Text("Personajes"), onPressed: () {}),
       TextButton(
           child: const Text("Partida"),

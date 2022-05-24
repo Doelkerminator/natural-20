@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:natural_20/screens/add_campaign.dart';
 import 'package:natural_20/screens/campaign_screen.dart';
+import 'package:natural_20/screens/enciclopedia_screen.dart';
 import 'package:natural_20/screens/login_screen.dart';
 import 'package:natural_20/screens/menu_screen.dart';
 
@@ -10,5 +11,6 @@ Map<String, WidgetBuilder> getApplicationRoutes() {
     '/menu': (context) => const MenuScreen(),
     '/list_campaign': (context) => const CampaignScreen(),
     '/add_campaign': (context) => const AddCampaignScreen(),
+    '/encyclopedia': (context) => const EnciclopediaScreen()
   };
 }

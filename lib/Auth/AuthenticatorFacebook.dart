@@ -1,8 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:natural_20/database/database_firestore.dart';
 
