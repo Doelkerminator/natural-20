@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:natural_20/models/campaign_model.dart';
 
-class DatabaseFirestore{
+class DatabaseFirestore {
   static Future<bool> checkIfDocExists(String docId) async {
     try {
-      CollectionReference collection = FirebaseFirestore.instance.collection('usuarios');
+      CollectionReference collection =
+          FirebaseFirestore.instance.collection('usuarios');
       var doc = await collection.doc(docId).get();
       return doc.exists;
     } catch (e) {
@@ -13,7 +15,8 @@ class DatabaseFirestore{
   }
 
   static Future<void> createUser(User user) async {
-    CollectionReference newUser = FirebaseFirestore.instance.collection('usuarios');
+    CollectionReference newUser =
+        FirebaseFirestore.instance.collection('usuarios');
     await newUser.doc(user.uid).set({
       "name": user.displayName,
       "email": user.email,
@@ -24,28 +27,23 @@ class DatabaseFirestore{
     });
   }
 
-  static Future<void> createCampaign(String urlImage, String nameCampaign, String detailsCampaign) async {
+  static Future<void> createCampaign(
+      String urlImage, String nameCampaign, String detailsCampaign) async {
     CollectionReference newCampaign =
-    FirebaseFirestore.instance.collection('campania');
-    User? user = FirebaseAuth.instance.currentUser;
-    await newCampaign.doc().set({
-      "name": nameCampaign,
-      "detail": detailsCampaign,
-      "image": urlImage,
-      "creator": {
-        "name": user?.displayName,
-        "email": user?.email,
-        "photo": user?.photoURL,
-        "provider": user?.providerData[0].providerId,
-        "uid": user?.uid,
-      }
-    });
+        FirebaseFirestore.instance.collection('campania');
+    Campaign? campaign = Campaign(nombre: nameCampaign, detalles: detailsCampaign, imagen: urlImage);  
+    await newCampaign.doc().set(campaign.toMap());
   }
 
-  static Future<void> getAllCampaigns() async {
-    CollectionReference campaigns = FirebaseFirestore.instance.collection('campania');
-    QuerySnapshot querySnapshot = await campaigns.get();
-    final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
-    print(allData);
+  static Future<List<Campaign>> getCampaignsCreates() async {
+    List<Campaign> dataCampaigns = [];
+    await FirebaseFirestore.instance.collection("campania").get().then((value) {
+      for (var i in value.docs) {
+        if(i.data()['creator']['uid'] == FirebaseAuth.instance.currentUser?.uid){
+          dataCampaigns.add(Campaign.fromMap(i.data()));
+        }
+      }
+    });
+    return dataCampaigns;
   }
 }

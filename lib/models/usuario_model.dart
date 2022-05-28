@@ -1,20 +1,16 @@
-class User{
+import 'package:firebase_auth/firebase_auth.dart';
+
+class UserModel {
   String? email;
   String? name;
   String? photo;
   String? provider;
   String? uid;
 
-  User({
-    this.email,
-    this.name,
-    this.photo,
-    this.provider,
-    this.uid
-  });
+  UserModel({this.email, this.name, this.photo, this.provider, this.uid});
 
-  factory User.fromMap(Map<String, dynamic> map){
-    return User(
+  factory UserModel.fromMap(Map<String, dynamic> map) {
+    return UserModel(
       email: map['email'],
       name: map['name'],
       photo: map['photo'] ?? "Not image",

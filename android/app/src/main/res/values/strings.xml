@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Natural 20</string>
+    <string name="app_name">natural_20</string>
     <string name="facebook_app_id">746632806716625</string>
     <string name="fb_login_protocol_scheme">fb746632806716625</string>
     <string name="facebook_client_token">e0f21b9bee3a4d2981e8bdf9cee35142</string>

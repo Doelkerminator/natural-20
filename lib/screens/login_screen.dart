@@ -2,6 +2,7 @@ import 'package:auth_buttons/auth_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:natural_20/Auth/AuthenticatorFacebook.dart';
 import 'package:natural_20/Auth/AuthenticatorGoogle.dart';
+import 'package:natural_20/Auth/AuthenticatorTwittter.dart';
 import 'package:natural_20/screens/menu_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -44,7 +45,6 @@ class _LoginScreenState extends State<LoginScreen> {
           Navigator.push(context, MaterialPageRoute(builder: (context) => const MenuScreen()));
         }
       },
-      darkMode: true,
       style: const AuthButtonStyle(
         buttonType: null,
         iconType: null,
@@ -59,7 +59,6 @@ class _LoginScreenState extends State<LoginScreen> {
           Navigator.push(context, MaterialPageRoute(builder: (context) => const MenuScreen()));
         }
       },
-      darkMode: true,
       style: const AuthButtonStyle(
         buttonType: null,
         iconType: null,
@@ -69,8 +68,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget tAuthButton(){
     return TwitterAuthButton(
-      onPressed: () {},
-      darkMode: true,
+      onPressed: () async {
+        if(await AuthenticatorTwitter.initSession(context: context) != null){
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const MenuScreen()));
+        }
+      },
       style: const AuthButtonStyle(
         buttonType: null,
         iconType: null,
