@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:natural_20/Auth/AuthenticatorFacebook.dart';
 import 'package:natural_20/Auth/AuthenticatorGoogle.dart';
 import 'package:natural_20/Auth/AuthenticatorTwittter.dart';
+import 'package:natural_20/screens/loading_screen.dart';
 import 'package:natural_20/screens/login_screen.dart';
 import 'package:natural_20/settings/settings_color.dart';
-import 'package:natural_20/routes/routes.dart';
 
 class DrawerView extends StatelessWidget {
   const DrawerView({Key? key}) : super(key: key);
@@ -31,22 +31,12 @@ class DrawerView extends StatelessWidget {
           ListTile(
               title: const Text('Cerrar Sesión'),
               leading: Icon(Icons.exit_to_app, color: SettingsColor.textColor),
-              onTap: () async {
-                if (FirebaseAuth
-                        .instance.currentUser?.providerData[0].providerId ==
-                    "google.com") {
-                  await AuthenticatorGoogle.closeSession();
-                } else if (FirebaseAuth
-                        .instance.currentUser?.providerData[0].providerId ==
-                    "facebook.com") {
-                  await AuthenticatorFacebook.closeSession();
-                } else if (FirebaseAuth
-                        .instance.currentUser?.providerData[0].providerId ==
-                    "twitter.com") {
-                  await AuthenticatorTwitter.closeSession();   
-                }
-                Navigator.pushAndRemoveUntil(context, 
-                MaterialPageRoute(builder: (context) => const LoginScreen()), (route) => false);
+              onTap: () {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const LoadingScreen()),
+                    (route) => false);
               })
         ])));
   }

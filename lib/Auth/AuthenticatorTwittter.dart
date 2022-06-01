@@ -4,7 +4,7 @@ import 'package:twitter_login/twitter_login.dart';
 
 import '../database/database_firestore.dart';
 
-class AuthenticatorTwitter{
+class AuthenticatorTwitter {
   /*static Future<User?> initSession({required BuildContext context}) async {
     User? user;
     
@@ -33,18 +33,13 @@ class AuthenticatorTwitter{
     return null;
   }*/
 
-  static Future<void> closeSession() async {
-    await FirebaseAuth.instance.signOut();
-  }
-
-
-  static Future<User> initSession({required BuildContext context}) async {
+  static Future<User?> initSession({required BuildContext context}) async {
     User? user;
-    // Create a TwitterLogin instance
-    final twitterLogin = TwitterLogin(
-        apiKey: 'US0wZlk1TmphQUkwVmhxb0E1V3o6MTpjaQ',
-        apiSecretKey: '1HedhxQ1DoMve8bkTNtMpnrapynWu5bdHKWcMwpqz6uoANnVy2',
-        redirectURI: 'natural_20://'
+    try{
+      final twitterLogin = TwitterLogin(
+        apiKey: 'Uc23KTmvskxqBkMCujiOnUpzD',
+        apiSecretKey: 'LnD8PUGbzECDJROXeQoEPx1DRDkvdOWv8X0yuOgLir7mi2xnM4',
+        redirectURI: 'natural-20://'
     );
 
     // Trigger the sign-in flow
@@ -62,5 +57,12 @@ class AuthenticatorTwitter{
           await DatabaseFirestore.createUser(user);
         }
       return user;
+    } catch(e){
+      return null;
+    }
+  }
+
+  static Future<void> closeSession() async {
+    await FirebaseAuth.instance.signOut();
   }
 }

@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:provider/provider.dart';
+import 'package:natural_20/providers/add_campaign_notifier.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +14,7 @@ class AddCampaignScreen extends StatefulWidget {
 }
 
 class _AddCampaignScreenState extends State<AddCampaignScreen> {
+  late bool isEnabled;
   PlatformFile? pickedFile;
   UploadTask? uploadTask;
   var txtNameController = TextEditingController();
@@ -34,39 +37,58 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
   }
 
   Widget formAddCampaign() {
-    String urlImage = "";
     return Form(
-        key: _formKey,
-        child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: SingleChildScrollView(
-                child: Column(children: [
-              txtFormFieldNameCampaign(),
-              const SizedBox(height: 20),
-              txtFormFieldDetailsCampaign(),
-              const SizedBox(height: 20),
-              pickedFile != null ? imageSelected() : Container(),
-              const SizedBox(height: 20),
-              ElevatedButton(
+      key: _formKey,
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: SingleChildScrollView(
+          child: IgnorePointer(
+            ignoring: context.watch<AddCampaignState>().isEnabled,
+            child: Column(
+              children: [
+                txtFormFieldNameCampaign(),
+                const SizedBox(height: 20),
+                txtFormFieldDetailsCampaign(),
+                const SizedBox(height: 20),
+                pickedFile != null ? imageSelected() : Container(),
+                const SizedBox(height: 20),
+                ElevatedButton(
                   onPressed: selectImage,
                   child: const Text("Seleccionar Imagen")),
-              const SizedBox(height: 20),
-              Padding(
+                const SizedBox(height: 20),
+                Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        urlImage = await uploadImage();
-                        print(urlImage);
-                        DatabaseFirestore.createCampaign(urlImage,
-                            txtNameController.text, txtDetailsController.text);
-                      }
-                    },
-                    child: const Text('Enviar'),
-                  )),
-              const SizedBox(height: 20),
-              buildProgress()
-            ]))));
+                  child: context.watch<AddCampaignState>().isNotLoading
+                    ? ElevatedButton(
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            context.read<AddCampaignState>().changeLoad();
+                            context.read<AddCampaignState>().chengeEnabled();
+                            await upload();
+                            context.read<AddCampaignState>().loadMessageComplete();
+                            await Future.delayed(const Duration(seconds: 3), (){});
+                            context.read<AddCampaignState>().chengeEnabled();
+                            context.read<AddCampaignState>().changeLoad();
+                            context.read<AddCampaignState>().recoveryLoadMessage();
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Navigator.pushNamed(context, '/list_campaign');
+                          }
+                        },
+                        child: const Text('Enviar'),
+                      )
+                    : Center(
+                        child: Column(
+                          children: [
+                            CircularProgressIndicator(),
+                            SizedBox(height: 5),
+                            Text("${context.watch<AddCampaignState>().loadMessage}")
+                          ],
+                        ) 
+                      )),
+                const SizedBox(height: 20)
+              ]),
+          ))));
   }
 
   Widget txtFormFieldNameCampaign() {
@@ -112,6 +134,7 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
 
   Future<String> uploadImage() async {
     final path = 'imagesCampaign/${pickedFile!.name}';
+    print("E");
     final file = File(pickedFile!.path!);
     final ref = FirebaseStorage.instance.ref().child(path);
     setState(() {
@@ -155,11 +178,18 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
 
   Widget imageSelected() {
     return SizedBox(
+      width: MediaQuery.of(context).size.width / 1.5,
+      child: Image.file(
+        File(pickedFile!.path!),
         width: MediaQuery.of(context).size.width / 1.5,
-        child: Image.file(
-          File(pickedFile!.path!),
-          width: MediaQuery.of(context).size.width / 1.5,
-          fit: BoxFit.cover,
-        ));
+        fit: BoxFit.cover,
+      ));
+  }
+
+  Future upload() async {
+    String urlImage = "";
+    urlImage = await uploadImage();
+    DatabaseFirestore.createCampaign(
+        urlImage, txtNameController.text, txtDetailsController.text);
   }
 }

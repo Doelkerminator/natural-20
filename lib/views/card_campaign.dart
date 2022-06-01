@@ -16,7 +16,7 @@ class CardCampaign extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Image(
-              image: NetworkImage('${campaign?.imagen}'),
+              image: campaign?.imagen != null ? NetworkImage('${campaign?.imagen}') : const AssetImage('assets/campaignImage.jpg') as ImageProvider,
               height: 184,
               alignment: Alignment.topCenter, 
               fit: BoxFit.fitWidth,
