@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../models/CharacterModel.dart';
+
 class DatabaseFirestore{
   static Future<bool> checkIfDocExists(String docId) async {
     try {
@@ -40,6 +42,14 @@ class DatabaseFirestore{
         "uid": user?.uid,
       }
     });
+  }
+
+  static Future<void> createCharacter(Character character) async {
+    CollectionReference characterRef = FirebaseFirestore.instance.collection('usuarios');
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await characterRef.doc(user.uid).collection('characters').add(character.toMap());
+    }
   }
 
   static Future<void> getAllCampaigns() async {
