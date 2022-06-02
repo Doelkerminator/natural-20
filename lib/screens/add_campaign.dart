@@ -20,19 +20,21 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
   var txtNameController = TextEditingController();
   var txtDetailsController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-          appBar: AppBar(
-            title: const Text('Crear Campaña'),
-            leading: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(Icons.arrow_back, color: SettingsColor.textColor)),
-          ),
-          body: formAddCampaign()),
+        key: _scaffoldKey,
+        appBar: AppBar(
+          title: const Text('Crear Campaña'),
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back, color: SettingsColor.textColor)),
+        ),
+        body: formAddCampaign()),
     );
   }
 
@@ -50,7 +52,8 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
                 const SizedBox(height: 20),
                 txtFormFieldDetailsCampaign(),
                 const SizedBox(height: 20),
-                pickedFile != null ? imageSelected() : Container(),
+                (pickedFile?.name == null || pickedFile?.name == "Not Image" || (pickedFile!.extension != "png" && pickedFile!.extension != "jpg")) ? Image.asset("assets/not-available_campaign.png") : imageSelected(),
+                Text(context.watch<AddCampaignState>().imageStatus),
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: selectImage,
@@ -61,18 +64,17 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
                   child: context.watch<AddCampaignState>().isNotLoading
                     ? ElevatedButton(
                         onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            context.read<AddCampaignState>().changeLoad();
-                            context.read<AddCampaignState>().chengeEnabled();
-                            await upload();
-                            context.read<AddCampaignState>().loadMessageComplete();
-                            await Future.delayed(const Duration(seconds: 3), (){});
-                            context.read<AddCampaignState>().chengeEnabled();
-                            context.read<AddCampaignState>().changeLoad();
-                            context.read<AddCampaignState>().recoveryLoadMessage();
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                            Navigator.pushNamed(context, '/list_campaign');
+                          principal: if (_formKey.currentState!.validate()) {
+                            if(pickedFile != null){
+                              if(pickedFile!.extension != "png" && pickedFile!.extension != "jpg"){
+                                context.read<AddCampaignState>().imageStatusTypeNotCorrect();
+                                break principal;
+                              } else { 
+                                await process(); 
+                                break principal; 
+                              }
+                            }
+                            await process();
                           }
                         },
                         child: const Text('Enviar'),
@@ -80,9 +82,9 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
                     : Center(
                         child: Column(
                           children: [
-                            CircularProgressIndicator(),
-                            SizedBox(height: 5),
-                            Text("${context.watch<AddCampaignState>().loadMessage}")
+                            const CircularProgressIndicator(),
+                            const SizedBox(height: 5),
+                            Text(context.watch<AddCampaignState>().loadMessage)
                           ],
                         ) 
                       )),
@@ -130,22 +132,30 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
     setState(() {
       pickedFile = result.files.first;
     });
+    if(pickedFile!.extension != "png" && pickedFile!.extension != "jpg"){
+      context.read<AddCampaignState>().imageStatusTypeNotCorrect();
+    } else {
+      context.read<AddCampaignState>().imageStatusSelected();
+    }
   }
 
   Future<String> uploadImage() async {
-    final path = 'imagesCampaign/${pickedFile!.name}';
-    print("E");
-    final file = File(pickedFile!.path!);
-    final ref = FirebaseStorage.instance.ref().child(path);
-    setState(() {
-      uploadTask = ref.putFile(file);
-    });
-    final snapshot = await uploadTask!.whenComplete(() {});
-    final urlImage = await snapshot.ref.getDownloadURL();
-    setState(() {
-      uploadTask = null;
-    });
-    return urlImage;
+    if(pickedFile == null || (pickedFile?.extension != "png" && pickedFile?.extension != "jpg")){
+      return "Not Image";
+    } else {
+      final path = 'imagesCampaign/${pickedFile?.name}';
+      final file = File(pickedFile!.path!);
+      final ref = FirebaseStorage.instance.ref().child(path);
+      setState(() {
+        uploadTask = ref.putFile(file);
+      });
+      final snapshot = await uploadTask!.whenComplete(() {});
+      final urlImage = await snapshot.ref.getDownloadURL();
+      setState(() {
+        uploadTask = null;
+      });
+      return urlImage;
+    }
   }
 
   Widget buildProgress() => StreamBuilder<TaskSnapshot>(
@@ -189,7 +199,24 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
   Future upload() async {
     String urlImage = "";
     urlImage = await uploadImage();
+    if(urlImage == "Not Image"){
+      urlImage = "";
+    }
     DatabaseFirestore.createCampaign(
         urlImage, txtNameController.text, txtDetailsController.text);
+  }
+
+  Future process() async{
+    context.read<AddCampaignState>().changeLoad();
+    context.read<AddCampaignState>().chengeEnabled();
+    await upload();
+    context.read<AddCampaignState>().loadMessageComplete();
+    await Future.delayed(const Duration(seconds: 3), (){});
+    context.read<AddCampaignState>().chengeEnabled();
+    context.read<AddCampaignState>().changeLoad();
+    context.read<AddCampaignState>().recoveryLoadMessage();
+    Navigator.pop(context);
+    Navigator.pop(context);
+    Navigator.pushNamed(context, '/list_campaign');
   }
 }

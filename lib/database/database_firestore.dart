@@ -28,7 +28,7 @@ class DatabaseFirestore {
   }
 
   static Future<void> createCampaign(
-      String urlImage, String nameCampaign, String detailsCampaign) async {
+      String? urlImage, String nameCampaign, String detailsCampaign) async {
     CollectionReference newCampaign =
         FirebaseFirestore.instance.collection('campania');
     Campaign? campaign = Campaign(nombre: nameCampaign, detalles: detailsCampaign, imagen: urlImage);  
