@@ -1,9 +1,4 @@
 import 'package:natural_20/models/Meta/AttackModel.dart';
-import 'package:natural_20/models/Meta/ProficiencyModel.dart';
-import 'package:natural_20/models/API_deprecated/SpellModel.dart';
-
-import 'API_deprecated/LanguageModel.dart';
-import 'Meta/SpeedModel.dart';
 
 class Character {
 //Main info
@@ -78,7 +73,7 @@ class Character {
   int? ep;
   int? gp;
   int? pp;
-  List<String>? equipment;
+  List<String>? items;
 
 //Character traits
   String? personalityTraits;
@@ -183,7 +178,7 @@ class Character {
     this.ep,
     this.gp,
     this.pp,
-    this.equipment,
+    this.items,
     this.personalityTraits,
     this.ideals,
     this.bonds,
@@ -225,6 +220,7 @@ class Character {
   });
 
   factory Character.fromMap(Map <String, dynamic> map) {
+    var attackList = map['attacks'] as List;
     return Character(
       name: map['name'],
       level: map['level'],
@@ -257,7 +253,221 @@ class Character {
       insight: map['skills']['insight'],
       intimidation: map['skills']['intimidation'],
       investigation: map['skills']['investigation'],
-      //Aquí te quedaste bue
+      medicine: map['skills']['medicine'],
+      nature: map['skills']['nature'],
+      perception: map['skills']['perception'],
+      performance: map['skills']['performance'],
+      persuasion: map['skills']['persuasion'],
+      religion: map['skills']['religion'],
+      sleightOfHand: map['skills']['sleigh_of_hand'],
+      stealth: map['skills']['stealth'],
+      survival: map['skills']['survival'],
+      passiveWisdom: map['passive_wisdom'],
+      languages: map['languages'],
+      proficiencies: map['proficiencies'],
+      armorClass: map['battle']['armor_class'],
+      initiative: map['battle']['initiative'],
+      speed: map['battle']['speed'],
+      hitPoints: map['battle']['hit_points'],
+      maxHitPoints: map['battle']['max_hit_points'],
+      temporaryHitPoints: map['battle']['temporary_hit_points'],
+      hitDice: map['battle']['hit_dice'],
+      deathSaveSuccess: map['battle']['death_saves']['successes'],
+      deathSaveFail: map['battle']['death_saves']['failures'],
+      attacks: attackList.map((attack) => Attack.fromMap(attack)).toList(),
+      cp: map['equipment']['money']['cp'],
+      sp: map['equipment']['money']['sp'],
+      ep: map['equipment']['money']['ep'],
+      gp: map['equipment']['money']['gp'],
+      pp: map['equipment']['money']['pp'],
+      items: map['equipment']['items'],
+      personalityTraits: map['character_trait']['personality_traits'],
+      ideals: map['character_trait']['ideals'],
+      bonds: map['character_trait']['bonds'],
+      flaws: map['character_trait']['flaws'],
+      features: map['features'],
+      age: map['physical']['age'],
+      height: map['physical']['height'],
+      weight: map['physical']['width'],
+      eyes: map['physical']['eyes'],
+      skin: map['physical']['skin'],
+      hair: map['physical']['hair'],
+      appearance: map['physical']['appearance'],
+      backstory: map['backstory'],
+      allies: map['allies'],
+      treasure: map['treasure'],
+      spellcastingAbility: map['spellcasting']['ability'],
+      spellSave: map['spellcasting']['spell_save'],
+      spellAttackBonus: map['spellcasting']['spell_attack_bonus'],
+      spellSlots0: map['spellcasting']['spells'][0]['slots'],
+      spells0: map['spellcasting']['spells'][0]['spells'],
+      spellSlots1: map['spellcasting']['spells'][1]['slots'],
+      spells1: map['spellcasting']['spells'][1]['spells'],
+      spellSlots2: map['spellcasting']['spells'][2]['slots'],
+      spells2: map['spellcasting']['spells'][2]['spells'],
+      spellSlots3: map['spellcasting']['spells'][3]['slots'],
+      spells3: map['spellcasting']['spells'][3]['spells'],
+      spellSlots4: map['spellcasting']['spells'][4]['slots'],
+      spells4: map['spellcasting']['spells'][4]['spells'],
+      spellSlots5: map['spellcasting']['spells'][5]['slots'],
+      spells5: map['spellcasting']['spells'][5]['spells'],
+      spellSlots6: map['spellcasting']['spells'][6]['slots'],
+      spells6: map['spellcasting']['spells'][6]['spells'],
+      spellSlots7: map['spellcasting']['spells'][7]['slots'],
+      spells7: map['spellcasting']['spells'][7]['spells'],
+      spellSlots8: map['spellcasting']['spells'][8]['slots'],
+      spells8: map['spellcasting']['spells'][8]['spells'],
+      spellSlots9: map['spellcasting']['spells'][9]['slots'],
+      spells9: map['spellcasting']['spells'][9]['spells'],
     );
+  }
+
+  Map<String, dynamic> toMap() {
+    List<Map<String,dynamic>> attackList = [];
+    for (var attack in attacks!) {
+      attackList.add(attack.toMap());
+    }
+    return
+    {
+      "name": name,
+      "level": level,
+      "class": classe,
+      "background": backstory,
+      "player_name": playerName,
+      "race": race,
+      "alignment": alignment,
+      "xp": xp,
+      "ability": {
+        "strength": strength,
+        "dexterity": dexterity,
+        "constitution": constitution,
+        "intelligence": intelligence,
+        "wisdom": wisdom,
+        "charisma": charisma
+      },
+      "inspiration": inspiration,
+      "proficiency_bonus": proficiencyBonus,
+      "saving_throws": {
+        "strength": savingStrength,
+        "dexterity": savingDexterity,
+        "constitution": savingConstitution,
+        "intelligence": savingIntelligence,
+        "wisdom": savingWisdom,
+        "charisma": savingCharisma
+      },
+      "skills": {
+        "acrobatics": acrobatics,
+        "animal_handling": animalHandling,
+        "arcana": arcana,
+        "athletics": athletics,
+        "deception": deception,
+        "history": history,
+        "insight": insight,
+        "intimidation": intimidation,
+        "investigation": investigation,
+        "medicine": medicine,
+        "nature": nature,
+        "perception": perception,
+        "performance": performance,
+        "persuasion": persuasion,
+        "religion": religion,
+        "sleight_of_hand": sleightOfHand,
+        "stealth": stealth,
+        "survival": survival
+      },
+      "passive_wisdom": passiveWisdom,
+      "languages": languages,
+      "proficiencies": proficiencies,
+      "battle": {
+        "armor_class": armorClass,
+        "initiative": initiative,
+        "speed": speed,
+        "hit_points": hitPoints,
+        "max_hit_points": maxHitPoints,
+        "temporary_hit_points": temporaryHitPoints,
+        "hit_dice": hitDice,
+        "death_saves": {
+          "successes": deathSaveSuccess,
+          "failures": deathSaveFail
+        }
+      },
+      "attacks": attackList,
+      "equipment": {
+        "money": {
+          "cp": cp,
+          "sp": sp,
+          "ep": ep,
+          "gp": gp,
+          "pp": pp
+        },
+        "items": items
+      },
+      "character_traits": {
+        "personality_traits": personalityTraits,
+        "ideals": ideals,
+        "bonds": bonds,
+        "flaws": flaws
+      },
+      "features": features,
+      "physical": {
+        "age": age,
+        "height": height,
+        "weight": weight,
+        "eyes": eyes,
+        "skin": skin,
+        "hair": hair,
+        "appearance": appearance
+      },
+      "backstory": backstory,
+      "allies": allies,
+      "treasure": treasure,
+      "spellcasting": {
+        "ability": spellcastingAbility,
+        "spell_save": spellSave,
+        "spell_attack_bonus": spellAttackBonus,
+        "spells": {
+          "0": {
+          "slots": spellSlots0,
+          "spells": spells0
+          },
+          "1": {
+          "slots": spellSlots1,
+          "spells": spells1
+          },
+          "2": {
+          "slots": spellSlots2,
+          "spells": spells2
+          },
+          "3": {
+          "slots": spellSlots3,
+          "spells": spells3
+          },
+          "4": {
+          "slots": spellSlots4,
+          "spells": spells4
+          },
+          "5": {
+          "slots": spellSlots5,
+          "spells": spells5
+          },
+          "6": {
+          "slots": spellSlots6,
+          "spells": spells6
+          },
+          "7": {
+          "slots": spellSlots7,
+          "spells": spells7
+          },
+          "8": {
+          "slots": spellSlots8,
+          "spells": spells8
+          },
+          "9": {
+          "slots": spellSlots9,
+          "spells": spells9
+          }
+        }
+      }
+    };
   }
 }

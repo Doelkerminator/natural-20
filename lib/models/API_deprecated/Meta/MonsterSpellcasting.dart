@@ -1,4 +1,4 @@
-import 'package:natural_20/models/Meta/MonsterSpellModel.dart';
+import 'package:natural_20/models/API_deprecated/Meta/MonsterSpellModel.dart';
 import 'UsageModel.dart';
 
 class MonsterSpellcasting {

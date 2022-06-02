@@ -13,4 +13,12 @@ class Damage {
       type: map['type'],
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return
+    {
+      "type": type,
+      "damage": damage
+    };
+  }
 }

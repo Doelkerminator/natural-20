@@ -18,5 +18,14 @@ class Attack {
       damage: Damage.fromMap(map['damage'])
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return
+    {
+      "name": name,
+      "attack_bonus": attackBonus,
+      "damage": damage?.toMap()
+    };
+  }
 }
 

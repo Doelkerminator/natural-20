@@ -1,4 +1,4 @@
-import '../Meta/CostModel.dart';
+import 'Meta/CostModel.dart';
 import '../Meta/DamageModel.dart';
 
 class WeaponEquipment {

@@ -1,9 +1,9 @@
 import 'package:natural_20/models/API_deprecated/ConditionModel.dart';
 import 'package:natural_20/models/Meta/ProficiencyModel.dart';
-import 'package:natural_20/models/Meta/SensesModel.dart';
-import 'package:natural_20/models/Meta/SpecialAbility.dart';
-import '../Meta/ActionModel.dart';
-import '../Meta/SpeedModel.dart';
+import 'Meta/SensesModel.dart';
+import 'Meta/SpecialAbility.dart';
+import 'Meta/ActionModel.dart';
+import 'Meta/SpeedModel.dart';
 
 class Monster {
   String? index;
