@@ -3,6 +3,7 @@ import 'package:natural_20/models/usuario_model.dart';
 import 'notes_model.dart';
 
 class Campaign {
+  String? id;
   String? nombre;
   String? imagen;
   String? detalles;
