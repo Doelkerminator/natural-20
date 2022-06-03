@@ -34,6 +34,7 @@ class CardCampaign extends StatelessWidget {
                     print(campaign);
                     Navigator.pushNamed(context, "/details_campaign", 
                     arguments: {
+                      "id" : campaign!.id,
                       "name": campaign!.nombre,
                       "image": campaign!.imagen,
                       "detail": campaign!.detalles,

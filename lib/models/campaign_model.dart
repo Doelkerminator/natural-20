@@ -9,16 +9,16 @@ class Campaign {
   String? detalles;
   UserModel? creador;
   List<Note>? notas;
+  List<String>? personajes;
 
-  Campaign({this.id, this.nombre, this.imagen, this.detalles, this.creador});
+  Campaign({this.id, this.nombre, this.imagen, this.detalles, this.creador, this.personajes});
 
   factory Campaign.fromMap(Map<String, dynamic> map) {
     return Campaign(
-      id: map['id'],
-      nombre: map['name'],
-      imagen: map['image'] ?? 'Not Image',
-      detalles: map['detail']
-    );
+        id: map['id'],
+        nombre: map['name'],
+        imagen: map['image'] ?? 'Not Image',
+        detalles: map['detail']);
   }
 
   Map<String, dynamic> toMap() {
@@ -31,7 +31,8 @@ class Campaign {
         "name": FirebaseAuth.instance.currentUser?.displayName,
         "email": FirebaseAuth.instance.currentUser?.email,
         "photo": FirebaseAuth.instance.currentUser?.photoURL,
-        "provider": FirebaseAuth.instance.currentUser?.providerData[0].providerId,
+        "provider":
+            FirebaseAuth.instance.currentUser?.providerData[0].providerId,
         "uid": FirebaseAuth.instance.currentUser?.uid,
       }
     };

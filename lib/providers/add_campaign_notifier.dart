@@ -45,4 +45,9 @@ class AddCampaignState extends ChangeNotifier {
     _imageStatus = "Ninguna Imagen Seleccionada";
     notifyListeners();
   }
+
+  void loadMessageDelete(){
+    _loadMessage = "Eliminando";
+    notifyListeners();
+  }
 }

@@ -17,7 +17,7 @@ class _DetailCampaignState extends State<DetailCampaign> with SingleTickerProvid
   @override
   void initState() {
     super.initState();
-    tabController = TabController(length: 3, vsync: this);
+    tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -35,7 +35,6 @@ class _DetailCampaignState extends State<DetailCampaign> with SingleTickerProvid
                 controller: tabController,
                 tabs: const [
                   Tab(text: 'Detalles'),
-                  Tab(text: 'Notas'),
                   Tab(text: 'Personajes'),
                 ],
               ),
@@ -46,8 +45,7 @@ class _DetailCampaignState extends State<DetailCampaign> with SingleTickerProvid
               controller: tabController,
               children: <Widget>[
                 Center(child: detalles(campaign)),
-                const Center(child: Text('Content of Profile')),
-                const Center(child: Text('Content of Profile')),
+                Center(child: characters(campaign)),
               ],
             ),
           ),
@@ -77,6 +75,12 @@ class _DetailCampaignState extends State<DetailCampaign> with SingleTickerProvid
 
   Widget detalles(Map<String, dynamic> camp){
     return FormCampaign(objCampaig: Campaign.fromMap(camp));
+  }
+
+  Widget characters(Map<String, dynamic> camp){
+    return ListView.builder(
+      itemBuilder: camp['personajes']
+    );
   }
 }
 

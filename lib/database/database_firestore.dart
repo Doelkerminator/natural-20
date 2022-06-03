@@ -71,4 +71,15 @@ class DatabaseFirestore {
     return dataCampaigns;
   }
 
+  static Future<void> deleteCampaign(String? id) async {
+    FirebaseFirestore.
+      instance.
+      collection('campania').
+      where("id", isEqualTo: id).
+      limit(1).
+      get().
+      then((QuerySnapshot snapshot){
+        snapshot.docs[0].reference.delete();
+      });
+  }
 }
