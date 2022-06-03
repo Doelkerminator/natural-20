@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:natural_20/screens/CharacterEdit.dart';
 import 'package:natural_20/screens/add_campaign.dart';
 import 'package:natural_20/screens/campaign_screen.dart';
 import 'package:natural_20/screens/enciclopedia_screen.dart';
@@ -13,6 +14,7 @@ Map<String, WidgetBuilder> getApplicationRoutes() {
     '/list_campaign': (context) => const CampaignScreen(),
     '/add_campaign': (context) => const AddCampaignScreen(),
     '/encyclopedia': (context) => const EnciclopediaScreen(),
-    '/characters': (context) => const CharacterScreen()
+    '/characters': (context) => const CharacterScreen(),
+    '/character_form': (context) => const CharacterEditScreen()
   };
 }

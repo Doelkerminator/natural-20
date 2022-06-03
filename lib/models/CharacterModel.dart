@@ -2,6 +2,7 @@ import 'package:natural_20/models/Meta/AttackModel.dart';
 
 class Character {
 //Main info
+  String? uid;
   String? name;
   int? level;
   String? classe;
@@ -120,6 +121,7 @@ class Character {
   List<String>? spells9;
 
   Character({
+    this.uid,
     this.name,
     this.level,
     this.classe,
@@ -219,9 +221,10 @@ class Character {
     this.spells9,
   });
 
-  factory Character.fromMap(Map <String, dynamic> map) {
+  factory Character.fromMap(Map <dynamic, dynamic> map) {
     var attackList = map['attacks'] as List;
     return Character(
+      uid: map['uid'],
       name: map['name'],
       level: map['level'],
       classe: map['class'],
@@ -281,10 +284,6 @@ class Character {
       gp: map['equipment']['money']['gp'],
       pp: map['equipment']['money']['pp'],
       items: map['equipment']['items'],
-      personalityTraits: map['character_trait']['personality_traits'],
-      ideals: map['character_trait']['ideals'],
-      bonds: map['character_trait']['bonds'],
-      flaws: map['character_trait']['flaws'],
       features: map['features'],
       age: map['physical']['age'],
       height: map['physical']['height'],
@@ -299,36 +298,13 @@ class Character {
       spellcastingAbility: map['spellcasting']['ability'],
       spellSave: map['spellcasting']['spell_save'],
       spellAttackBonus: map['spellcasting']['spell_attack_bonus'],
-      spellSlots0: map['spellcasting']['spells'][0]['slots'],
-      spells0: map['spellcasting']['spells'][0]['spells'],
-      spellSlots1: map['spellcasting']['spells'][1]['slots'],
-      spells1: map['spellcasting']['spells'][1]['spells'],
-      spellSlots2: map['spellcasting']['spells'][2]['slots'],
-      spells2: map['spellcasting']['spells'][2]['spells'],
-      spellSlots3: map['spellcasting']['spells'][3]['slots'],
-      spells3: map['spellcasting']['spells'][3]['spells'],
-      spellSlots4: map['spellcasting']['spells'][4]['slots'],
-      spells4: map['spellcasting']['spells'][4]['spells'],
-      spellSlots5: map['spellcasting']['spells'][5]['slots'],
-      spells5: map['spellcasting']['spells'][5]['spells'],
-      spellSlots6: map['spellcasting']['spells'][6]['slots'],
-      spells6: map['spellcasting']['spells'][6]['spells'],
-      spellSlots7: map['spellcasting']['spells'][7]['slots'],
-      spells7: map['spellcasting']['spells'][7]['spells'],
-      spellSlots8: map['spellcasting']['spells'][8]['slots'],
-      spells8: map['spellcasting']['spells'][8]['spells'],
-      spellSlots9: map['spellcasting']['spells'][9]['slots'],
-      spells9: map['spellcasting']['spells'][9]['spells'],
     );
   }
 
   Map<String, dynamic> toMap() {
-    List<Map<String,dynamic>> attackList = [];
-    for (var attack in attacks!) {
-      attackList.add(attack.toMap());
-    }
     return
     {
+      "uid": uid,
       "name": name,
       "level": level,
       "class": classe,
@@ -391,7 +367,7 @@ class Character {
           "failures": deathSaveFail
         }
       },
-      "attacks": attackList,
+      "attacks": [],
       "equipment": {
         "money": {
           "cp": cp,

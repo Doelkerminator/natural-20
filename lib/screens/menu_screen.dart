@@ -33,7 +33,11 @@ class _MenuScreenState extends State<MenuScreen> {
           Navigator.pushNamed(context, '/encyclopedia');
         }
       ),
-      TextButton(child: Text("Personajes"), onPressed: () {}),
+      TextButton(child: const Text("Personajes"),
+        onPressed: () {
+          Navigator.pushNamed(context, '/characters');
+        }
+      ),
       TextButton(
           child: const Text("Partida"),
           onPressed: () {

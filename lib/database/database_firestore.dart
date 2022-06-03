@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -55,6 +57,7 @@ class DatabaseFirestore{
   static Future<void> createCharacter(Character character) async {
     CollectionReference characterRef = FirebaseFirestore.instance.collection('usuarios');
     User? user = FirebaseAuth.instance.currentUser;
+    print(user!.uid);
     if (user != null) {
       await characterRef.doc(user.uid).collection('characters').add(character.toMap());
     }
@@ -62,9 +65,14 @@ class DatabaseFirestore{
 
   static Future<List<Character>?> getUserCharacters() async {
     User? user = FirebaseAuth.instance.currentUser;
+    List<Character> characters = [];
     CollectionReference characterRef = FirebaseFirestore.instance.collection('usuarios').doc(user!.uid).collection('characters');
-    QuerySnapshot querySnapshot = await characterRef.get();
-    return querySnapshot.docs.map((character) => Character.fromMap(character.data() as Map<String,dynamic>)).toList();
+    await characterRef.get().then((value) {
+      for (var i in value.docs) {
+        characters.add(Character.fromMap(i.data() as Map));
+      }
+    });
+    return characters;
   }
 
   static Future<Character?> getCharacter(String charId) async {
