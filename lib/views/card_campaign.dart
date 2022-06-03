@@ -31,11 +31,12 @@ class CardCampaign extends StatelessWidget {
                 title: Text('${campaign?.nombre}'),
                 trailing: IconButton(
                   onPressed: () {
+                    print(campaign);
                     Navigator.pushNamed(context, "/details_campaign", 
                     arguments: {
                       "name": campaign!.nombre,
                       "image": campaign!.imagen,
-                      "details": campaign!.detalles,
+                      "detail": campaign!.detalles,
                       "creator": campaign!.creador,
                       "notes": campaign!.notas,
                     });

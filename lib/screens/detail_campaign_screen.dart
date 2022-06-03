@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:natural_20/models/campaign_model.dart';
+import 'package:natural_20/views/form_campaign_view.dart';
 import '../settings/settings_color.dart';
 
 class DetailCampaign extends StatefulWidget {
@@ -41,11 +43,11 @@ class _DetailCampaignState extends State<DetailCampaign> with SingleTickerProvid
           ),
           SliverFillRemaining (// contenido suplementario restante TabBarView
             child: TabBarView(
-              controller: this.tabController,
+              controller: tabController,
               children: <Widget>[
-                Center(child: Text('Content of Home')),
-                Center(child: Text('Content of Profile')),
-                Center(child: Text('Content of Profile')),
+                Center(child: detalles(campaign)),
+                const Center(child: Text('Content of Profile')),
+                const Center(child: Text('Content of Profile')),
               ],
             ),
           ),
@@ -73,8 +75,8 @@ class _DetailCampaignState extends State<DetailCampaign> with SingleTickerProvid
     );
   }
 
-  Widget Detalles(){
-    
+  Widget detalles(Map<String, dynamic> camp){
+    return FormCampaign(objCampaig: Campaign.fromMap(camp));
   }
 }
 

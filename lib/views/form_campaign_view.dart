@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +26,6 @@ class _FormCampaignState extends State<FormCampaign> {
   @override
   void initState() {
     super.initState();
-
     if (widget.objCampaig != null) {
       txtNameController.text = widget.objCampaig!.nombre!;
       txtDetailsController.text = widget.objCampaig!.detalles!;
@@ -52,12 +50,14 @@ class _FormCampaignState extends State<FormCampaign> {
                 const SizedBox(height: 20),
                 txtFormFieldDetailsCampaign(),
                 const SizedBox(height: 20),
-                (pickedFile?.name == null ||
+                image(),
+                /*widget.objCampaig == null ? ((pickedFile?.name == null ||
                     pickedFile?.name == "Not Image" ||
                     (pickedFile!.extension != "png" &&
-                        pickedFile!.extension != "jpg"))
+                      pickedFile!.extension != "jpg"))
                   ? Image.asset("assets/not-available_campaign.png")
-                  : imageSelected(),
+                  : imageSelected()) : (widget.objCampaig!.imagen! == "" ? 
+                  Image.asset("assets/not-available_campaign.png") : Image.network(widget.objCampaig!.imagen!)),*/
                 Text(context.watch<AddCampaignState>().imageStatus),
                 const SizedBox(height: 20),
                 ElevatedButton(
@@ -71,19 +71,34 @@ class _FormCampaignState extends State<FormCampaign> {
                             onPressed: () async {
                               principal:
                               if (_formKey.currentState!.validate()) {
-                                if (pickedFile != null) {
-                                  if (pickedFile!.extension != "png" &&
-                                      pickedFile!.extension != "jpg") {
-                                    context
-                                        .read<AddCampaignState>()
-                                        .imageStatusTypeNotCorrect();
-                                    break principal;
-                                  } else {
-                                    await process();
-                                    break principal;
+                                if (widget.objCampaig == null) {
+                                  if (pickedFile != null) {
+                                    if (pickedFile!.extension != "png" &&
+                                        pickedFile!.extension != "jpg") {
+                                      context
+                                          .read<AddCampaignState>()
+                                          .imageStatusTypeNotCorrect();
+                                      break principal;
+                                    } else {
+                                      await process();
+                                      break principal;
+                                    }
                                   }
+                                  await process();
+                                } else {
+                                  if (pickedFile != null) {
+                                    if (pickedFile!.extension != "png" &&
+                                        pickedFile!.extension != "jpg") {
+                                      context
+                                      .read<AddCampaignState>()
+                                      .imageStatusTypeNotCorrect();
+                                      break principal;
+                                    } else {
+                                      await process();
+                                      break principal;
+                                    }
+                                  } else {await process();}
                                 }
-                                await process();
                               }
                             },
                             child: const Text('Enviar'),
@@ -210,14 +225,17 @@ class _FormCampaignState extends State<FormCampaign> {
     String urlImage = "";
     urlImage = await uploadImage();
     if (urlImage == "Not Image") {
+      if(widget.objCampaig != null){
+        if(pickedFile == null){
+          
+        }
+      }
       urlImage = "";
     }
-    if(widget.objCampaig == null){
+    if (widget.objCampaig == null) {
       DatabaseFirestore.createCampaign(
-        urlImage, txtNameController.text, txtDetailsController.text);
-    } else {
-      
-    }
+          urlImage, txtNameController.text, txtDetailsController.text);
+    } else {}
   }
 
   Future process() async {
@@ -232,5 +250,31 @@ class _FormCampaignState extends State<FormCampaign> {
     Navigator.pop(context);
     Navigator.pop(context);
     Navigator.pushNamed(context, '/list_campaign');
+  }
+
+  Widget image() {
+    if (widget.objCampaig == null) {
+      if (pickedFile?.name == null ||
+          pickedFile?.name == "Not Image" ||
+          (pickedFile!.extension != "png" && pickedFile!.extension != "jpg")) {
+        return Image.asset("assets/not-available_campaign.png");
+      } else {
+        return imageSelected();
+      }
+    } else {
+      if (widget.objCampaig!.imagen! == "" && pickedFile?.name == null) {
+        context.watch<AddCampaignState>().imageStatusNoSelected();
+        return Image.asset("assets/not-available_campaign.png");
+      } else if (widget.objCampaig!.imagen! != "" && pickedFile?.name == null) {
+        context.watch<AddCampaignState>().imageStatusSelected();
+        return Image.network(widget.objCampaig!.imagen!);
+      } else if ((widget.objCampaig!.imagen! != "" ||
+              widget.objCampaig!.imagen! == "") &&
+          pickedFile?.name != null) {
+        context.watch<AddCampaignState>().imageStatusSelected();
+        return imageSelected();
+      }
+      return imageSelected();
+    }
   }
 }

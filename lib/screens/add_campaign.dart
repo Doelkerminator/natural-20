@@ -11,18 +11,16 @@ class AddCampaignScreen extends StatefulWidget {
 class _AddCampaignScreenState extends State<AddCampaignScreen> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: const Text('Crear Campaña'),
           leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(Icons.arrow_back, color: SettingsColor.textColor)),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(Icons.arrow_back, color: SettingsColor.textColor)),
         ),
-        body: FormCampaign()),
-    );
+        body: FormCampaign());
   }
 
   /*Widget formAddCampaign() {

@@ -10,18 +10,20 @@ class Campaign {
   UserModel? creador;
   List<Note>? notas;
 
-  Campaign({this.nombre, this.imagen, this.detalles, this.creador});
+  Campaign({this.id, this.nombre, this.imagen, this.detalles, this.creador});
 
   factory Campaign.fromMap(Map<String, dynamic> map) {
     return Campaign(
+      id: map['id'],
       nombre: map['name'],
       imagen: map['image'] ?? 'Not Image',
-      detalles: map['detail'],
-      creador: UserModel.fromMap(map['creator']));
+      detalles: map['detail']
+    );
   }
 
   Map<String, dynamic> toMap() {
     return {
+      "id": id,
       "name": nombre,
       "detail": detalles,
       "image": imagen,

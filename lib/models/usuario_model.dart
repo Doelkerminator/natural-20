@@ -18,4 +18,14 @@ class UserModel {
       uid: map['uid'],
     );
   }
+
+  static Map<String, dynamic> toMap() {
+    return {
+      "name": FirebaseAuth.instance.currentUser?.displayName,
+      "email": FirebaseAuth.instance.currentUser?.email,
+      "photo": FirebaseAuth.instance.currentUser?.photoURL,
+      "provider": FirebaseAuth.instance.currentUser?.providerData[0].providerId,
+      "uid": FirebaseAuth.instance.currentUser?.uid,
+    };
+  }
 }

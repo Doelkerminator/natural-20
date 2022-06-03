@@ -40,4 +40,9 @@ class AddCampaignState extends ChangeNotifier {
     _imageStatus = "Imagen seleccionada";
     notifyListeners();
   }
+
+  void imageStatusNoSelected() {
+    _imageStatus = "Ninguna Imagen Seleccionada";
+    notifyListeners();
+  }
 }
