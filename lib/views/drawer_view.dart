@@ -30,7 +30,7 @@ class DrawerView extends StatelessWidget {
                   Text("${FirebaseAuth.instance.currentUser?.email}")),
           ListTile(
               title: const Text('Cerrar Sesión'),
-              leading: Icon(Icons.exit_to_app, color: SettingsColor.textColor),
+              leading: Icon(Icons.exit_to_app, color: SettingsColor.secondaryColor),
               onTap: () {
                 Navigator.pushAndRemoveUntil(
                     context,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:natural_20/models/campaign_model.dart';
 import 'package:natural_20/views/form_campaign_view.dart';
+import 'package:natural_20/views/form_note_view.dart';
 import '../settings/settings_color.dart';
 
 class DetailCampaign extends StatefulWidget {
@@ -17,7 +18,7 @@ class _DetailCampaignState extends State<DetailCampaign> with SingleTickerProvid
   @override
   void initState() {
     super.initState();
-    tabController = TabController(length: 2, vsync: this);
+    tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -35,6 +36,7 @@ class _DetailCampaignState extends State<DetailCampaign> with SingleTickerProvid
                 controller: tabController,
                 tabs: const [
                   Tab(text: 'Detalles'),
+                  Tab(text: 'Notas'),
                   Tab(text: 'Personajes'),
                 ],
               ),
@@ -45,7 +47,8 @@ class _DetailCampaignState extends State<DetailCampaign> with SingleTickerProvid
               controller: tabController,
               children: <Widget>[
                 Center(child: detalles(campaign)),
-                Center(child: characters(campaign)),
+                Center(child: notas(campaign['id'])),
+                Center(child: Text('el')),
               ],
             ),
           ),
@@ -75,6 +78,10 @@ class _DetailCampaignState extends State<DetailCampaign> with SingleTickerProvid
 
   Widget detalles(Map<String, dynamic> camp){
     return FormCampaign(objCampaig: Campaign.fromMap(camp));
+  }
+
+  Widget notas(String id){
+    return FormNote(idCampaign: id);
   }
 
   Widget characters(Map<String, dynamic> camp){

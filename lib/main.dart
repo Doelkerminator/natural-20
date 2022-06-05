@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:natural_20/providers/add_campaign_notifier.dart';
+import 'package:natural_20/providers/add_note_notifier.dart';
 import 'package:natural_20/providers/login_notifier.dart';
 import 'package:natural_20/routes/routes.dart';
 import 'package:natural_20/screens/screen_splash.dart';
@@ -12,7 +13,8 @@ void main() async {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_)=> LoginState()),
-      ChangeNotifierProvider(create: (_)=> AddCampaignState())
+      ChangeNotifierProvider(create: (_)=> AddCampaignState()),
+      ChangeNotifierProvider(create: (_)=> AddNoteState())
     ],
     child: const MyApp(),
   ));
@@ -24,7 +26,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       routes: getApplicationRoutes(),
+      theme: ThemeData(fontFamily: "Schyler"),
       home: const SplashScreen()
     );
   }

@@ -286,7 +286,6 @@ class _FormCampaignState extends State<FormCampaign> {
       }
     } else {
       if (widget.objCampaig!.imagen! == "" && pickedFile?.name == null) {
-        context.watch<AddCampaignState>().imageStatusNoSelected();
         return Image.asset("assets/not-available_campaign.png");
       } else if (widget.objCampaig!.imagen! != "" && pickedFile?.name == null) {
         context.watch<AddCampaignState>().imageStatusSelected();

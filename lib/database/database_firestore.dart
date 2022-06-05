@@ -82,4 +82,16 @@ class DatabaseFirestore {
         snapshot.docs[0].reference.delete();
       });
   }
+
+  static Future<void> createNote(String? id) async{
+    FirebaseFirestore.
+      instance.
+      collection('campania').
+      where("id", isEqualTo: id).
+      limit(1).
+      get().
+      then((QuerySnapshot snapshot){
+        print(snapshot.docs[0].reference.get());
+      });
+  }
 }

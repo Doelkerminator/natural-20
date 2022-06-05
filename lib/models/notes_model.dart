@@ -1,10 +1,12 @@
 class Note{
+  String? id;
   String? titulo;
   String? dscNota;
   DateTime? fecha;
 
 
   Note({ 
+    this.id,
     this.titulo, 
     this.dscNota,
     this.fecha
@@ -12,13 +14,15 @@ class Note{
 
   factory Note.fromMap(Map<String, dynamic> noteMap) {
     return Note(
-        titulo: noteMap['titulo'],
-        dscNota: noteMap['dscNota'],
-        fecha: noteMap['fecha']);
+      id: noteMap['id'],
+      titulo: noteMap['titulo'],
+      dscNota: noteMap['dscNota'],
+      fecha: noteMap['fecha']);
   }
 
   Map<String, dynamic> toMap() {
     return {
+      "id": id,
       "titulo": titulo, 
       "dscNota": dscNota,
       "fecha": fecha
