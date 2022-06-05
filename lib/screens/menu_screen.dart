@@ -27,19 +27,23 @@ class _MenuScreenState extends State<MenuScreen> {
 
   Widget radial() {
     return Column(children: [
-      ElevatedButton(
+      TextButton(
         child: const Text("Enciclopedia"),
         onPressed: () {
           Navigator.pushNamed(context, '/encyclopedia');
         }
       ),
-      ElevatedButton(child: Text("Personajes"), onPressed: () {}),
-      ElevatedButton(
+      TextButton(child: const Text("Personajes"),
+        onPressed: () {
+          Navigator.pushNamed(context, '/characters');
+        }
+      ),
+      TextButton(
           child: const Text("Partida"),
           onPressed: () {
             Navigator.pushNamed(context, '/list_campaign');
           }),
-      ElevatedButton(child: Text("Dado"), onPressed: () {})
+      TextButton(child: Text("Dado"), onPressed: () {}),
     ]);
   }
 }

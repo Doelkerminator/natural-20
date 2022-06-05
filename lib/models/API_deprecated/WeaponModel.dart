@@ -1,5 +1,5 @@
 import 'Meta/CostModel.dart';
-import 'Meta/DamageModel.dart';
+import '../Meta/DamageModel.dart';
 
 class WeaponEquipment {
   String? index;

@@ -1,4 +1,4 @@
-import 'package:natural_20/models/Meta/SpellDamageModel.dart';
+import 'package:natural_20/models/API_deprecated/Meta/SpellDamageModel.dart';
 
 class Spell {
   String? index;

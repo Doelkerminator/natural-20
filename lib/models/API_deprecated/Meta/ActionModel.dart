@@ -1,6 +1,6 @@
 
-import 'AttackModel.dart';
-import 'DamageModel.dart';
+import '../../Meta/AttackModel.dart';
+import '../../Meta/DamageModel.dart';
 import 'DcModel.dart';
 
 class Action {

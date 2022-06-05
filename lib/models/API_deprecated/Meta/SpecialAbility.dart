@@ -1,5 +1,5 @@
-import 'package:natural_20/models/Meta/MonsterSpellcasting.dart';
-import 'DamageModel.dart';
+import 'MonsterSpellcasting.dart';
+import '../../Meta/DamageModel.dart';
 import 'DcModel.dart';
 
 class SpecialAbility {
