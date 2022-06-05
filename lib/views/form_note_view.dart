@@ -46,38 +46,38 @@ class _FormNoteState extends State<FormNote> {
               children: [
                 txtFormFieldTitleNote(),
                 const SizedBox(height: 20),
-                txtFormFieldTitleNote(),
+                txtFormFieldDescriptionNote(),
                 const SizedBox(height: 20),
                 Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    child: context.watch<AddNoteState>().isNotLoading ?
-                        Column(
-                          children: [
-                            ElevatedButton(
-                                onPressed: () async {
-                                  if (_formKey.currentState!.validate()) {
-                                    await process();
-                                  }
-                                },
-                                child: const Text('Guardar nota'),
-                            ),
-                            const SizedBox(height: 10),
-                            widget.objNote != null ? ElevatedButton(
-                            onPressed:() async {
-                              await process();
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: context.watch<AddNoteState>().isNotLoading ?
+                    Column(
+                      children: [
+                        ElevatedButton(
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                await process();
+                              }
                             },
-                            child: const Text("Borrar nota")): Container()
-                          ]
-                        )
-                        : Center(
-                            child: Column(
-                            children: [
-                              const CircularProgressIndicator(),
-                              const SizedBox(height: 5),
-                              Text(
-                                  context.watch<AddNoteState>().loadMessage)
-                            ],
-                          ))),
+                            child: const Text('Guardar nota'),
+                        ),
+                        const SizedBox(height: 10),
+                        widget.objNote != null ? ElevatedButton(
+                        onPressed:() async {
+                          await process();
+                        },
+                        child: const Text("Borrar nota")): Container()
+                      ]
+                    )
+                    : Center(
+                        child: Column(
+                        children: [
+                          const CircularProgressIndicator(),
+                          const SizedBox(height: 5),
+                          Text(
+                              context.watch<AddNoteState>().loadMessage)
+                        ],
+                      ))),
               ]
             )
           )
@@ -122,25 +122,19 @@ class _FormNoteState extends State<FormNote> {
   Future process() async {
     context.read<AddNoteState>().changeLoad();
     context.read<AddNoteState>().chengeEnabled();
-    if(widget.objNote == null){
-      await create();
-    } else {
-      await delete();
-    }
-    //await DatabaseFirestore.deleteCampaign(widget.objCampaig?.id);
-    context.read<AddNoteState>().loadMessageDelete();
+    await create();
+    context.read<AddNoteState>().loadMessageComplete();
     await Future.delayed(const Duration(seconds: 3), () {});
     context.read<AddNoteState>().chengeEnabled();
     context.read<AddNoteState>().changeLoad();
     context.read<AddNoteState>().recoveryLoadMessage();
-    context.read<AddNoteState>().imageStatusNoSelected();
     Navigator.pop(context);
     Navigator.pop(context);
     Navigator.pushNamed(context, '/list_campaign');
   }
 
   Future create() async {
-    await DatabaseFirestore.createNote(widget.idCampaign);
+    await DatabaseFirestore.createNote(widget.idCampaign, txtTitleController.text, txtDesctiptionController.text);
   }
 
   Future delete() async {

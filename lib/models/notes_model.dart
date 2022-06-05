@@ -2,7 +2,7 @@ class Note{
   String? id;
   String? titulo;
   String? dscNota;
-  DateTime? fecha;
+  String? fecha;
 
 
   Note({ 

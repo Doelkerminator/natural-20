@@ -51,13 +51,6 @@ class _FormCampaignState extends State<FormCampaign> {
                 txtFormFieldDetailsCampaign(),
                 const SizedBox(height: 20),
                 image(),
-                /*widget.objCampaig == null ? ((pickedFile?.name == null ||
-                    pickedFile?.name == "Not Image" ||
-                    (pickedFile!.extension != "png" &&
-                      pickedFile!.extension != "jpg"))
-                  ? Image.asset("assets/not-available_campaign.png")
-                  : imageSelected()) : (widget.objCampaig!.imagen! == "" ? 
-                  Image.asset("assets/not-available_campaign.png") : Image.network(widget.objCampaig!.imagen!)),*/
                 Text(context.watch<AddCampaignState>().imageStatus),
                 const SizedBox(height: 20),
                 ElevatedButton(

@@ -1,15 +1,20 @@
 import 'package:flutter/cupertino.dart';
+import '../models/notes_model.dart';
 
-class AddNoteState extends ChangeNotifier{
+class AddNoteState extends ChangeNotifier {
+  Note? _noteE = null;
+  String _stateNotes = "List";
   bool _isNotLoading = true;
   bool _isNotEnabled = false;
   String _loadMessage = "Procesando";
   String _imageStatus = "Ninguna Imagen Seleccionada";
 
+  String get stateNotes => _stateNotes;
   bool get isNotLoading => _isNotLoading;
   bool get isEnabled => _isNotEnabled;
   String get loadMessage => _loadMessage;
   String get imageStatus => _imageStatus;
+  Note? get noteE => _noteE;
 
   void changeLoad() {
     _isNotLoading = !_isNotLoading;
@@ -46,8 +51,28 @@ class AddNoteState extends ChangeNotifier{
     notifyListeners();
   }
 
-  void loadMessageDelete(){
+  void loadMessageDelete() {
     _loadMessage = "Eliminando";
+    notifyListeners();
+  }
+
+  void changeStateToCreate() {
+    _stateNotes = "Create";
+    notifyListeners();
+  }
+
+  void changeStateToEdit() {
+    _stateNotes = "Edit";
+    notifyListeners();
+  }
+
+  void changeStateToList() {
+    _stateNotes = "List";
+    notifyListeners();
+  }
+
+  Note? changeNoteE(Note? n) {
+    _noteE = n;
     notifyListeners();
   }
 }

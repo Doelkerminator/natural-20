@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:natural_20/models/campaign_model.dart';
+import 'package:natural_20/providers/add_note_notifier.dart';
 import 'package:natural_20/views/form_campaign_view.dart';
 import 'package:natural_20/views/form_note_view.dart';
+import 'package:natural_20/views/list_notes_view.dart';
+import 'package:provider/provider.dart';
 import '../settings/settings_color.dart';
 
 class DetailCampaign extends StatefulWidget {
@@ -11,7 +14,8 @@ class DetailCampaign extends StatefulWidget {
   State<DetailCampaign> createState() => _DetailCampaignState();
 }
 
-class _DetailCampaignState extends State<DetailCampaign> with SingleTickerProviderStateMixin {
+class _DetailCampaignState extends State<DetailCampaign>
+    with SingleTickerProviderStateMixin {
   late Map<String, dynamic> campaign;
   late TabController tabController;
 
@@ -23,38 +27,40 @@ class _DetailCampaignState extends State<DetailCampaign> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) {
-    campaign = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    campaign =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          sliverBar(campaign),
-          SliverPersistentHeader (// TabBar que puede ser techo
-            pinned: true,
-            delegate: StickyTabBarDelegate(
-              child: TabBar(
-                labelColor: Colors.black,
-                controller: tabController,
-                tabs: const [
-                  Tab(text: 'Detalles'),
-                  Tab(text: 'Notas'),
-                  Tab(text: 'Personajes'),
-                ],
-              ),
-            ),
-          ),
-          SliverFillRemaining (// contenido suplementario restante TabBarView
-            child: TabBarView(
+        body: CustomScrollView(
+      slivers: <Widget>[
+        sliverBar(campaign),
+        SliverPersistentHeader(
+          // TabBar que puede ser techo
+          pinned: true,
+          delegate: StickyTabBarDelegate(
+            child: TabBar(
+              labelColor: Colors.black,
               controller: tabController,
-              children: <Widget>[
-                Center(child: detalles(campaign)),
-                Center(child: notas(campaign['id'])),
-                Center(child: Text('el')),
+              tabs: const [
+                Tab(text: 'Detalles'),
+                Tab(text: 'Notas'),
+                Tab(text: 'Personajes'),
               ],
             ),
           ),
-        ],
-      )
-    );
+        ),
+        SliverFillRemaining(
+          // contenido suplementario restante TabBarView
+          child: TabBarView(
+            controller: tabController,
+            children: <Widget>[
+              Center(child: detalles(campaign)),
+              notas(campaign['id']),
+              Center(child: Text('el')),
+            ],
+          ),
+        ),
+      ],
+    ));
   }
 
   Widget sliverBar(Map<String, dynamic> camp) {
@@ -65,29 +71,39 @@ class _DetailCampaignState extends State<DetailCampaign> with SingleTickerProvid
       expandedHeight: MediaQuery.of(context).size.height / 2.2,
       leading: IconButton(
           onPressed: () {
+            context.read<AddNoteState>().changeStateToList();
             Navigator.pop(context);
           },
           icon: Icon(Icons.arrow_back, color: SettingsColor.textColor)),
       flexibleSpace: FlexibleSpaceBar(
           title: Text("${camp['name']}"),
-          background:
-              camp['image'] != "" ? Image.network("${camp['image']}", fit: BoxFit.cover) 
-              : Image.asset('assets/not-available_campaign.png', fit: BoxFit.cover)),
+          background: camp['image'] != ""
+              ? Image.network("${camp['image']}", fit: BoxFit.cover)
+              : Image.asset('assets/not-available_campaign.png',
+                  fit: BoxFit.cover)),
     );
   }
 
-  Widget detalles(Map<String, dynamic> camp){
+  Widget detalles(Map<String, dynamic> camp) {
     return FormCampaign(objCampaig: Campaign.fromMap(camp));
   }
 
-  Widget notas(String id){
-    return FormNote(idCampaign: id);
+  Widget notas(String id) {
+    Widget not = Container();
+    if (context.watch<AddNoteState>().stateNotes == "List") {
+      not = ListNotesView(idCampaign: id);
+    } else if (context.watch<AddNoteState>().stateNotes == "Create") {
+      not = Center(child: FormNote(idCampaign: id));
+    } else if (context.watch<AddNoteState>().stateNotes == "Edit") {
+      not = Center(
+          child: FormNote(
+              objNote: context.watch<AddNoteState>().noteE, idCampaign: id));
+    }
+    return not;
   }
 
-  Widget characters(Map<String, dynamic> camp){
-    return ListView.builder(
-      itemBuilder: camp['personajes']
-    );
+  Widget characters(Map<String, dynamic> camp) {
+    return ListView.builder(itemBuilder: camp['personajes']);
   }
 }
 
@@ -113,4 +129,3 @@ class StickyTabBarDelegate extends SliverPersistentHeaderDelegate {
     return true;
   }
 }
-
