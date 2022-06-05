@@ -44,7 +44,6 @@ class _MenuScreenState extends State<MenuScreen> {
             Navigator.pushNamed(context, '/list_campaign');
           }),
       TextButton(child: Text("Dado"), onPressed: () {}),
-      TextButton(child: Text("Ei"), onPressed: () {})
     ]);
   }
 }
