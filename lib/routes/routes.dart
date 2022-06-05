@@ -4,6 +4,7 @@ import 'package:natural_20/screens/campaign_screen.dart';
 import 'package:natural_20/screens/enciclopedia_screen.dart';
 import 'package:natural_20/screens/login_screen.dart';
 import 'package:natural_20/screens/menu_screen.dart';
+import '../screens/detail_campaign_screen.dart';
 import '../screens/CharacterEdit.dart';
 import '../screens/CharacterScreen.dart';
 import '../screens/detail_campaign_screen.dart';

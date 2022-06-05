@@ -26,8 +26,8 @@ class _CharacterScreenState extends State<CharacterScreen> {
           if (snapshot.hasError) {
             print(snapshot.error);
             return const Center(
-              child: Text('Ocurrió un error en la solicitud'),
-            );
+              child: Text('Ocurrió un error en la solicitud'),<
+            );>
           }
           else {
             if (snapshot.connectionState == ConnectionState.done) {
