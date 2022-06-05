@@ -39,7 +39,7 @@ class _EnciclopediaState extends State<EnciclopediaScreen> {
                   expandedHeight: 200.0,
                   flexibleSpace: FlexibleSpaceBar(
                       background:
-                      Image.asset('assets/campaignImage.jpg', fit: BoxFit.cover)),
+                      Image.asset('assets/images/campaignImage.jpg', fit: BoxFit.cover)),
                 ),
                 SliverList(
                   delegate: SliverChildBuilderDelegate(

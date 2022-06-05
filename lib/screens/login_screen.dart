@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             children: [
               const SizedBox(height: 24),
-              Image.asset("assets/logo.png", width: screenSizes.width / 1.5),
+              Image.asset("assets/images/logo.png", width: screenSizes.width / 1.5),
               gAuthButton(),  
               _divider,
               fAuthButton(),

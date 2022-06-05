@@ -8,6 +8,8 @@ import 'package:natural_20/models/campaign_model.dart';
 import 'package:crypto/crypto.dart';
 import 'package:natural_20/models/notes_model.dart';
 
+import '../models/CharacterModel.dart';
+
 class DatabaseFirestore {
   static Future<bool> checkIfDocExists(String docId) async {
     try {
@@ -117,6 +119,31 @@ class DatabaseFirestore {
     });
   }
 
+  static Future<void> updateNote(String? idCamp, String? idNote, String title, String desc) async {
+    await FirebaseFirestore.instance
+        .collection('campania')
+        .where('id', isEqualTo: idCamp)
+        .get()
+        .then((value) {
+          value.docs.forEach((element) async {
+            final post = await FirebaseFirestore.instance
+                .collection('campania')
+                .doc(element.id)
+                .collection("notas")
+                .where("id", isEqualTo: idNote)
+                .limit(1)
+                .get()
+                .then((QuerySnapshot snapshot) {
+                  return snapshot.docs[0].reference;
+              });
+            var batch = FirebaseFirestore.instance.batch();
+            batch.update(post,
+                ({'titulo': title, 'dscNota': desc}));
+            batch.commit();  
+          });
+    });
+  }
+
   static Future<List<Note>> getNotesByCampaign(String? idCamp) async {
     String? idC;
     await FirebaseFirestore.instance
@@ -137,5 +164,4 @@ class DatabaseFirestore {
     });
     return dataNotes;
   }
-
 }

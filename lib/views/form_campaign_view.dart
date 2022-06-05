@@ -3,9 +3,11 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:natural_20/models/campaign_model.dart';
+import 'package:natural_20/settings/SettingsButtons.dart';
 import 'package:provider/provider.dart';
 import '../database/database_firestore.dart';
 import '../providers/add_campaign_notifier.dart';
+import '../settings/settings_form.dart';
 
 class FormCampaign extends StatefulWidget {
   Campaign? objCampaig;
@@ -41,7 +43,7 @@ class _FormCampaignState extends State<FormCampaign> {
     return Form(
         key: _formKey,
         child: Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
             child: SingleChildScrollView(
                 child: IgnorePointer(
               ignoring: context.watch<AddCampaignState>().isEnabled,
@@ -54,6 +56,7 @@ class _FormCampaignState extends State<FormCampaign> {
                 Text(context.watch<AddCampaignState>().imageStatus),
                 const SizedBox(height: 20),
                 ElevatedButton(
+                    style: SettingsButtons.buttonStyle1(),
                     onPressed: selectImage,
                     child: const Text("Seleccionar Imagen")),
                 Padding(
@@ -96,13 +99,14 @@ class _FormCampaignState extends State<FormCampaign> {
                                   }
                                 },
                                 child: const Text('Enviar'),
+                                style: SettingsButtons.buttonStyle1(),
                               ),
                               const SizedBox(height: 10),
                               widget.objCampaig != null ? ElevatedButton(
                     onPressed:(){
                        delete();
                     },
-                    child: const Text("Borrar partida")): Container()
+                    child: const Text("Borrar partida"), style: SettingsButtons.buttonStyle1(),): Container()
                           ]
                           
                         )
@@ -124,9 +128,8 @@ class _FormCampaignState extends State<FormCampaign> {
     return TextFormField(
       keyboardType: TextInputType.text,
       controller: txtNameController,
-      decoration: const InputDecoration(
-        labelText: 'Nombre de la Campaña',
-      ),
+      style: const TextStyle(color: Colors.white),
+      decoration: SettingsForm.textFieldDecoration('Nombre de la campaña'),
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Este campo no debe de estar vacío.';
@@ -141,9 +144,8 @@ class _FormCampaignState extends State<FormCampaign> {
       keyboardType: TextInputType.text,
       controller: txtDetailsController,
       maxLines: 8,
-      decoration: const InputDecoration(
-        labelText: 'Descripción de la campaña',
-      ),
+      style: const TextStyle(color: Colors.white),
+      decoration: SettingsForm.textFieldDecoration('Descripción de la campaña'),
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Este campo no debe de estar vacío.';
@@ -273,13 +275,13 @@ class _FormCampaignState extends State<FormCampaign> {
       if (pickedFile?.name == null ||
           pickedFile?.name == "Not Image" ||
           (pickedFile!.extension != "png" && pickedFile!.extension != "jpg" && pickedFile!.extension != "jpeg")) {
-        return Image.asset("assets/not-available_campaign.png");
+        return Image.asset("assets/images/not-available_campaign.png");
       } else {
         return imageSelected();
       }
     } else {
       if (widget.objCampaig!.imagen! == "" && pickedFile?.name == null) {
-        return Image.asset("assets/not-available_campaign.png");
+        return Image.asset("assets/images/not-available_campaign.png");
       } else if (widget.objCampaig!.imagen! != "" && pickedFile?.name == null) {
         context.watch<AddCampaignState>().imageStatusSelected();
         return Image.network(widget.objCampaig!.imagen!);
@@ -290,7 +292,7 @@ class _FormCampaignState extends State<FormCampaign> {
       } else if(pickedFile?.name != null &&
           (pickedFile!.extension != "png" && pickedFile!.extension != "jpg" && pickedFile!.extension != "jpeg")){
         context.watch<AddCampaignState>().imageStatusTypeNotCorrect();
-        return Image.asset("assets/not-available_campaign.png");
+        return Image.asset("assets/images/not-available_campaign.png");
       }
       return imageSelected();
     }

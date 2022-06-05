@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import '../models/MonsterModel.dart';
+import '../models/API_deprecated/MonsterModel.dart';
 
 class DnDApi {
 

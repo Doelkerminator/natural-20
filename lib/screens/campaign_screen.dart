@@ -23,6 +23,7 @@ class _CampaignScreenState extends State<CampaignScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: SettingsColor.primaryColor,
       body: FutureBuilder(
         future: DatabaseFirestore.getCampaignsCreates(),
         builder:
@@ -81,6 +82,7 @@ class _CampaignScreenState extends State<CampaignScreen>
       pinned: true,
       elevation: 0,
       expandedHeight: 250,
+      backgroundColor: SettingsColor.secondaryColor,
       leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -96,7 +98,7 @@ class _CampaignScreenState extends State<CampaignScreen>
       flexibleSpace: FlexibleSpaceBar(
           title: const Text('Campañas'),
           background:
-              Image.asset('assets/campaignImage.jpg', fit: BoxFit.cover)),
+              Image.asset('assets/images/campaignImage.jpg', fit: BoxFit.cover)),
     );
   }
 

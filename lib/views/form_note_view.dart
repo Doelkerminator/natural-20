@@ -134,7 +134,11 @@ class _FormNoteState extends State<FormNote> {
   }
 
   Future create() async {
-    await DatabaseFirestore.createNote(widget.idCampaign, txtTitleController.text, txtDesctiptionController.text);
+    if(widget.objNote == null){
+      await DatabaseFirestore.createNote(widget.idCampaign, txtTitleController.text, txtDesctiptionController.text);
+    } else {
+      await DatabaseFirestore.updateNote(widget.idCampaign, widget.objNote?.id, txtTitleController.text, txtDesctiptionController.text);
+    }
   }
 
   Future delete() async {
