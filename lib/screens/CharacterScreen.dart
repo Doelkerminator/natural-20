@@ -31,9 +31,7 @@ class _CharacterScreenState extends State<CharacterScreen> {
           }
           else {
             if (snapshot.connectionState == ConnectionState.done) {
-              if (snapshot.data == []) {
-                print('yay');
-                print(snapshot.data);
+              if (snapshot.data != []) {
                 newListSliver = characterList(snapshot.data);
               }
               else {
@@ -79,7 +77,7 @@ class _CharacterScreenState extends State<CharacterScreen> {
             ),
             flexibleSpace: FlexibleSpaceBar(
                 title: const Text('Personajes'),
-                background: Image.asset('assets/characterImage.jpg', fit: BoxFit.cover)
+                background: Image.asset('assets/images/characterImage.jpg', fit: BoxFit.cover)
             ),
           )
         ];

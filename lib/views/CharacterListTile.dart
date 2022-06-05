@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:natural_20/settings/settings_color.dart';
 
 import '../models/CharacterModel.dart';
 
@@ -11,21 +12,16 @@ class CharacterListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(character!.level);
     return InkWell(
       child: ListTile(
           leading: CircleAvatar(
             foregroundColor: Colors.black,
-            child: FadeInImage(
-              height: 50,
-              width: 50,
-              placeholder: const AssetImage('assets/load.gif'),
-              image: NetworkImage((character!.appearance != '' ? character!.appearance! : 'gs://natural-20-dbb1f.appspot.com/imagesCharacters/default.jpg')),
-              fadeInDuration: const Duration(milliseconds: 1000),
-            ),
+            backgroundImage: NetworkImage((character!.appearance != null ? character!.appearance! : 'https://firebasestorage.googleapis.com/v0/b/natural-20-dbb1f.appspot.com/o/imagesCharacters%2Fdefault.jpg?alt=media'))
           ),
-          title: Text(character!.name!),
-          subtitle: Text('${character!.race} - ${character!.classe}'),
-          trailing: Text('LV ${character!.level}')
+          title: Text(character!.name!, style: TextStyle(color: SettingsColor.textColor, fontSize: 24)),
+          subtitle: Text('${character!.race} - ${character!.classe}', style: const TextStyle(color: Colors.white, fontSize: 18)),
+          trailing: Text('LV ${character!.level}', style: const TextStyle(color: Colors.white))
       ),
     );
   }

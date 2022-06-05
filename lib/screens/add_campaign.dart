@@ -12,7 +12,9 @@ class _AddCampaignScreenState extends State<AddCampaignScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: SettingsColor.primaryColor,
         appBar: AppBar(
+          backgroundColor: SettingsColor.secondaryColor,
           title: const Text('Crear Campaña'),
           leading: IconButton(
               onPressed: () {

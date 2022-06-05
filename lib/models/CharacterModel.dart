@@ -221,7 +221,7 @@ class Character {
     this.spells9,
   });
 
-  factory Character.fromMap(Map <dynamic, dynamic> map) {
+  factory Character.fromMap(Map <String, dynamic> map) {
     var attackList = map['attacks'] as List;
     return Character(
       uid: map['uid'],

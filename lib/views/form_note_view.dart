@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:natural_20/database/database_firestore.dart';
 import 'package:natural_20/providers/add_note_notifier.dart';
+import 'package:natural_20/settings/SettingsButtons.dart';
 import 'package:provider/provider.dart';
 
 import '../models/notes_model.dart';
+import '../settings/settings_color.dart';
+import '../settings/settings_form.dart';
 
 class FormNote extends StatefulWidget {
   Note? objNote;
@@ -46,7 +49,7 @@ class _FormNoteState extends State<FormNote> {
               children: [
                 txtFormFieldTitleNote(),
                 const SizedBox(height: 20),
-                txtFormFieldTitleNote(),
+                txtFormFieldDescriptionNote(),
                 const SizedBox(height: 20),
                 Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -59,6 +62,7 @@ class _FormNoteState extends State<FormNote> {
                                     await process();
                                   }
                                 },
+                                style: SettingsButtons.buttonStyle1(),
                                 child: const Text('Guardar nota'),
                             ),
                             const SizedBox(height: 10),
@@ -66,16 +70,16 @@ class _FormNoteState extends State<FormNote> {
                             onPressed:() async {
                               await process();
                             },
-                            child: const Text("Borrar nota")): Container()
+                            child: const Text("Borrar nota"), style: SettingsButtons.buttonStyle1()): Container()
                           ]
                         )
                         : Center(
                             child: Column(
                             children: [
-                              const CircularProgressIndicator(),
+                              CircularProgressIndicator(color: SettingsColor.secondaryColor),
                               const SizedBox(height: 5),
                               Text(
-                                  context.watch<AddNoteState>().loadMessage)
+                                  context.watch<AddNoteState>().loadMessage, style: TextStyle(color: SettingsColor.textColor),)
                             ],
                           ))),
               ]
@@ -90,9 +94,8 @@ class _FormNoteState extends State<FormNote> {
     return TextFormField(
       keyboardType: TextInputType.text,
       controller: txtTitleController,
-      decoration: const InputDecoration(
-        labelText: 'NTirulo de la nota',
-      ),
+      style: const TextStyle(color: Colors.white),
+      decoration: SettingsForm.textFieldDecoration('Título de Nota'),
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Este campo no debe de estar vacío.';
@@ -107,9 +110,8 @@ class _FormNoteState extends State<FormNote> {
       keyboardType: TextInputType.text,
       controller: txtDesctiptionController,
       maxLines: 8,
-      decoration: const InputDecoration(
-        labelText: 'Descripción de la nota',
-      ),
+      style: const TextStyle(color: Colors.white),
+      decoration: SettingsForm.textFieldDecoration('Nota'),
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Este campo no debe de estar vacío.';

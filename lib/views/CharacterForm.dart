@@ -8,6 +8,7 @@ import 'package:crypto/crypto.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:natural_20/settings/SettingsButtons.dart';
 import 'package:natural_20/settings/settings_form.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +68,7 @@ class _CharacterForm extends State<CharacterForm> {
                           child: SizedBox(
                             height: MediaQuery.of(context).size.height*3/10,
                             width: MediaQuery.of(context).size.width*7/16,
-                            child: (pickedFile == null ? Image.asset('assets/defaultAppearance.jpg') : imageSelected()),
+                            child: (pickedFile == null ? Image.asset('assets/images/defaultAppearance.jpg') : imageSelected()),
                           ),
                           onTap: selectImage
                       ),
@@ -82,6 +83,7 @@ class _CharacterForm extends State<CharacterForm> {
                                 child: TextFormField(
                                     keyboardType: TextInputType.text,
                                     controller: txtName,
+                                    style: const TextStyle(color: Colors.white),
                                     decoration: SettingsForm.textFieldDecoration('Nombre'),
                                     validator: (value) {
                                       if(value == null || value.isEmpty) {
@@ -100,6 +102,7 @@ class _CharacterForm extends State<CharacterForm> {
                                 child: TextFormField(
                                     keyboardType: TextInputType.text,
                                     controller: txtClass,
+                                    style: const TextStyle(color: Colors.white),
                                     decoration: SettingsForm.textFieldDecoration('Clase'),
                                     validator: (value) {
                                       if(value == null || value.isEmpty) {
@@ -118,6 +121,7 @@ class _CharacterForm extends State<CharacterForm> {
                                 child: TextFormField(
                                     keyboardType: TextInputType.number,
                                     controller: txtLvl,
+                                    style: const TextStyle(color: Colors.white),
                                     decoration: SettingsForm.textFieldDecoration('Nivel'),
                                     validator: (value) {
                                       if(value == null || value.isEmpty || double.parse(value) % 1 != 0) {
@@ -136,6 +140,7 @@ class _CharacterForm extends State<CharacterForm> {
                                 child: TextFormField(
                                     keyboardType: TextInputType.text,
                                     controller: txtRace,
+                                    style: const TextStyle(color: Colors.white),
                                     decoration: SettingsForm.textFieldDecoration('Raza'),
                                     validator: (value) {
                                       if(value == null || value.isEmpty) {
@@ -165,6 +170,7 @@ class _CharacterForm extends State<CharacterForm> {
                                 child: TextFormField(
                                     keyboardType: TextInputType.text,
                                     controller: txtAlignment,
+                                    style: const TextStyle(color: Colors.white),
                                     decoration: SettingsForm.textFieldDecoration('Alineación'),
                                     validator: (value) {
                                       if(value == null || value.isEmpty) {
@@ -183,6 +189,7 @@ class _CharacterForm extends State<CharacterForm> {
                                 child: TextFormField(
                                     keyboardType: TextInputType.text,
                                     controller: txtBackground,
+                                    style: const TextStyle(color: Colors.white),
                                     decoration: SettingsForm.textFieldDecoration('Trasfondo'),
                                     validator: (value) {
                                       if(value == null || value.isEmpty) {
@@ -204,6 +211,7 @@ class _CharacterForm extends State<CharacterForm> {
                                     child: TextFormField(
                                         keyboardType: TextInputType.number,
                                         controller: txtSTR,
+                                        style: const TextStyle(color: Colors.white),
                                         decoration: SettingsForm.textFieldDecoration('STR'),
                                         validator: (value) {
                                           if(value == null || value.isEmpty || double.parse(value) % 1 != 0) {
@@ -222,6 +230,7 @@ class _CharacterForm extends State<CharacterForm> {
                                     child: TextFormField(
                                         keyboardType: TextInputType.number,
                                         controller: txtDEX,
+                                        style: const TextStyle(color: Colors.white),
                                         decoration: SettingsForm.textFieldDecoration('DEX'),
                                         validator: (value) {
                                           if(value == null || value.isEmpty || double.parse(value) % 1 != 0) {
@@ -240,6 +249,7 @@ class _CharacterForm extends State<CharacterForm> {
                                     child: TextFormField(
                                         keyboardType: TextInputType.number,
                                         controller: txtCON,
+                                        style: const TextStyle(color: Colors.white),
                                         decoration: SettingsForm.textFieldDecoration('CON'),
                                         validator: (value) {
                                           if(value == null || value.isEmpty || double.parse(value) % 1 != 0) {
@@ -263,6 +273,7 @@ class _CharacterForm extends State<CharacterForm> {
                                     child: TextFormField(
                                         keyboardType: TextInputType.number,
                                         controller: txtINT,
+                                        style: const TextStyle(color: Colors.white),
                                         decoration: SettingsForm.textFieldDecoration('INT'),
                                         validator: (value) {
                                           if(value == null || value.isEmpty || double.parse(value) % 1 != 0) {
@@ -281,6 +292,7 @@ class _CharacterForm extends State<CharacterForm> {
                                     child: TextFormField(
                                         keyboardType: TextInputType.number,
                                         controller: txtWIS,
+                                        style: const TextStyle(color: Colors.white),
                                         decoration: SettingsForm.textFieldDecoration('WIS'),
                                         validator: (value) {
                                           if(value == null || value.isEmpty || double.parse(value) % 1 != 0) {
@@ -299,6 +311,7 @@ class _CharacterForm extends State<CharacterForm> {
                                     child: TextFormField(
                                         keyboardType: TextInputType.number,
                                         controller: txtCHR,
+                                        style: const TextStyle(color: Colors.white),
                                         decoration: SettingsForm.textFieldDecoration('CHR'),
                                         validator: (value) {
                                           if(value == null || value.isEmpty || double.parse(value) % 1 != 0) {
@@ -319,18 +332,11 @@ class _CharacterForm extends State<CharacterForm> {
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: true
                     ? ElevatedButton(
+                    style: SettingsButtons.buttonStyle1(),
                     onPressed: () async {
                       secondary:
                       if(_formKey.currentState!.validate()) {
-                        if(pickedFile != null) {
-                          if(pickedFile!.extension != "png" && pickedFile!.extension != "jpg") {
-                            break secondary;
-                          }
-                          else {
-                            await process();
-                            break secondary;
-                          }
-                        }
+                        process();
                       }
                     },
                     child: const Text('Enviar'),
@@ -349,10 +355,10 @@ class _CharacterForm extends State<CharacterForm> {
       ),
     );
   }
-  Future<String> uploadImage() async {
+  Future<String?> uploadImage() async {
     if (pickedFile == null ||
         (pickedFile?.extension != "png" && pickedFile?.extension != "jpg")) {
-      return "Not Image";
+      return null;
     } else {
       String name = sha256.convert(utf8.encode('${pickedFile!.name} $Random()')).toString();
       final path = 'imagesCharacters/$name';
@@ -372,13 +378,8 @@ class _CharacterForm extends State<CharacterForm> {
 
   Future upload() async {
     User? user = FirebaseAuth.instance.currentUser;
-    String urlImage = "";
-    urlImage = await uploadImage();
-    if (urlImage == "Not Image") {
-      urlImage = "";
-    }
     Character character = Character(
-      uid: sha256.convert(utf8.encode(txtName.text + txtRace.text + txtClass.text + user!.uid)).toString(),
+      uid: sha1.convert(utf8.encode(txtName.text + txtRace.text + txtClass.text + user!.uid)).toString(),
       name: txtName.text,
       level: int.parse(txtLvl.text),
       classe: txtClass.text,
@@ -392,7 +393,7 @@ class _CharacterForm extends State<CharacterForm> {
       intelligence: int.parse(txtINT.text),
       wisdom: int.parse(txtWIS.text),
       charisma: int.parse(txtCHR.text),
-      appearance: urlImage
+      appearance: await uploadImage()
     );
     DatabaseFirestore.createCharacter(character);
   }

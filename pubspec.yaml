@@ -40,11 +40,17 @@ flutter:
 
   uses-material-design: true
   assets:
-    - assets/
+    - assets/images/
 
   fonts:
     - family: Schyler
       fonts:
-        - asset: assets/fuente.ttf
+        - asset: assets/fonts/Schyler.ttf
+    - family: Serpentine
+      fonts:
+        - asset: assets/fonts/Serpentine-Light.otf
+    - family: Queensila
+      fonts:
+        - asset: assets/fonts/Queensila.ttf
 
 

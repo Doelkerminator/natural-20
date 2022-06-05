@@ -25,6 +25,7 @@ class _DetailCampaignState extends State<DetailCampaign> with SingleTickerProvid
   Widget build(BuildContext context) {
     campaign = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     return Scaffold(
+      backgroundColor: SettingsColor.primaryColor,
       body: CustomScrollView(
         slivers: <Widget>[
           sliverBar(campaign),
@@ -48,7 +49,7 @@ class _DetailCampaignState extends State<DetailCampaign> with SingleTickerProvid
               children: <Widget>[
                 Center(child: detalles(campaign)),
                 Center(child: notas(campaign['id'])),
-                Center(child: Text('el')),
+                Center(child: Text('No hay personajes, aún...', style: TextStyle(color: SettingsColor.textColor))),
               ],
             ),
           ),
@@ -61,6 +62,7 @@ class _DetailCampaignState extends State<DetailCampaign> with SingleTickerProvid
     return SliverAppBar(
       floating: true,
       pinned: true,
+      backgroundColor: SettingsColor.secondaryColor,
       elevation: 0,
       expandedHeight: MediaQuery.of(context).size.height / 2.2,
       leading: IconButton(
@@ -72,7 +74,7 @@ class _DetailCampaignState extends State<DetailCampaign> with SingleTickerProvid
           title: Text("${camp['name']}"),
           background:
               camp['image'] != "" ? Image.network("${camp['image']}", fit: BoxFit.cover) 
-              : Image.asset('assets/not-available_campaign.png', fit: BoxFit.cover)),
+              : Image.asset('assets/images/not-available_campaign.png', fit: BoxFit.cover)),
     );
   }
 

@@ -6,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:natural_20/models/campaign_model.dart';
 import 'package:crypto/crypto.dart';
 
+import '../models/CharacterModel.dart';
+
 class DatabaseFirestore {
   static Future<bool> checkIfDocExists(String docId) async {
     try {
@@ -93,5 +95,55 @@ class DatabaseFirestore {
       then((QuerySnapshot snapshot){
         print(snapshot.docs[0].reference.get());
       });
+  }
+
+  // Character related
+  static Future<void> createCharacter(Character character) async {
+    CollectionReference characterRef = FirebaseFirestore.instance.collection('usuarios');
+    User? user = FirebaseAuth.instance.currentUser;
+    print(user!.uid);
+    if (user != null) {
+      await characterRef.doc(user.uid).collection('characters').add(character.toMap());
+    }
+  }
+
+  static Future<List<Character>?> getUserCharacters() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    List<Character> characters = [];
+    CollectionReference characterRef = FirebaseFirestore.instance.collection('usuarios').doc(user!.uid).collection('characters');
+    await characterRef.get().then((value) {
+      for (var i in value.docs) {
+        print(i.data());
+        print(i.data().runtimeType);
+        var character = Character.fromMap(i.data() as Map<String, dynamic>);
+        characters.add(character);
+      }
+    });
+    return characters;
+  }
+
+  static Future<Character?> getCharacter(String charId) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    CollectionReference characterRef = FirebaseFirestore.instance.collection('usuarios').doc(user!.uid).collection('characters');
+    var characterDoc = await characterRef.doc(charId).get();
+    if(characterDoc.exists) {
+      return Character.fromMap(characterDoc.data() as Map<String,dynamic>);
+    }
+    else {
+      print('Character $charId was not found in ${user.uid} character list');
+      return null;
+    }
+  }
+
+  static Future<void> updateCharacter(String charId, Character character) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    CollectionReference characterRef = FirebaseFirestore.instance.collection('usuarios').doc(user!.uid).collection('characters');
+    await characterRef.doc(charId).update(character.toMap());
+  }
+
+  static Future<void> deleteCharacter(String charId) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    CollectionReference characterRef = FirebaseFirestore.instance.collection('usuarios').doc(user!.uid).collection('characters');
+    await characterRef.doc(charId).delete();
   }
 }

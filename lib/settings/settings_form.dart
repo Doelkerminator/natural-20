@@ -8,6 +8,7 @@ class SettingsForm {
       labelStyle: TextStyle(
         color: SettingsColor.textColor
       ),
+      focusColor: SettingsColor.textColor,
       fillColor: Colors.transparent,
       border: const OutlineInputBorder()
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:natural_20/models/campaign_model.dart';
+import 'package:natural_20/settings/settings_color.dart';
 
 class CardCampaign extends StatelessWidget {
   CardCampaign({Key? key, this.campaign}) : super(key: key);
@@ -8,6 +9,7 @@ class CardCampaign extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.black87,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       margin: const EdgeInsets.all(15),
       elevation: 10,
@@ -19,7 +21,7 @@ class CardCampaign extends StatelessWidget {
             Image(
               image: campaign?.imagen != ""
                 ? NetworkImage('${campaign?.imagen}')
-                : const AssetImage('assets/not-available_campaign.png')
+                : const AssetImage('assets/images/not-available_campaign.png')
                 as ImageProvider,
               height: 184,  
               alignment: Alignment.topCenter,
@@ -28,7 +30,7 @@ class CardCampaign extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 20),
               child: ListTile(
-                title: Text('${campaign?.nombre}'),
+                title: Text('${campaign?.nombre}', style: TextStyle(color: SettingsColor.textColor)),
                 trailing: IconButton(
                   onPressed: () {
                     print(campaign);
@@ -42,7 +44,7 @@ class CardCampaign extends StatelessWidget {
                       "notes": campaign!.notas,
                     });
                   },
-                  icon: const Icon(Icons.chevron_right)),
+                  icon: const Icon(Icons.chevron_right), color: SettingsColor.textColor),
               ))
         ])));
   }

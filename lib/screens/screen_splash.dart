@@ -13,7 +13,7 @@ class SplashScreen extends StatelessWidget {
       navigateRoute: FirebaseAuth.instance.currentUser != null ? const MenuScreen() : const LoginScreen(),
       duration: 5000,
       imageSize: 500,
-      imageSrc: "assets/logo.png",
+      imageSrc: "assets/images/logo.png",
       textType: TextType.ScaleAnimatedText,
     );
   }

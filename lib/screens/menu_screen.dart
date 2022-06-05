@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:natural_20/screens/campaign_screen.dart';
+import 'package:natural_20/settings/SettingsButtons.dart';
+import 'package:natural_20/settings/settings_color.dart';
 import 'package:natural_20/views/drawer_view.dart';
 
 class MenuScreen extends StatefulWidget {
@@ -14,12 +16,13 @@ class _MenuScreenState extends State<MenuScreen> {
   Widget build(BuildContext context) {
     var screenSizes = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: SettingsColor.primaryColor,
         drawer: const DrawerView(),
         body: SingleChildScrollView(
             child: Center(
                 child: Column(children: [
           const SizedBox(height: 24),
-          Image.asset("assets/logo.png", width: screenSizes.width / 1.5),
+          Image.asset("assets/images/logo.png", width: screenSizes.width / 1.5),
           const SizedBox(height: 50),
           radial()
         ]))));
@@ -27,23 +30,30 @@ class _MenuScreenState extends State<MenuScreen> {
 
   Widget radial() {
     return Column(children: [
-      TextButton(
+      ElevatedButton(
+        style: SettingsButtons.buttonStyle1(),
         child: const Text("Enciclopedia"),
         onPressed: () {
           Navigator.pushNamed(context, '/encyclopedia');
         }
       ),
-      TextButton(child: const Text("Personajes"),
+      ElevatedButton(
+        child: const Text("Personajes"),
+        style: SettingsButtons.buttonStyle1(),
         onPressed: () {
           Navigator.pushNamed(context, '/characters');
         }
       ),
-      TextButton(
+      ElevatedButton(
           child: const Text("Partida"),
+          style: SettingsButtons.buttonStyle1(),
           onPressed: () {
             Navigator.pushNamed(context, '/list_campaign');
           }),
-      TextButton(child: Text("Dado"), onPressed: () {}),
+      ElevatedButton(
+        style: SettingsButtons.buttonStyle1(),
+        child: Text("Dado"),
+        onPressed: () {}),
     ]);
   }
 }
