@@ -16,16 +16,22 @@ class _MenuScreenState extends State<MenuScreen> {
   Widget build(BuildContext context) {
     var screenSizes = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: SettingsColor.primaryColor,
-        drawer: const DrawerView(),
-        body: SingleChildScrollView(
-            child: Center(
-                child: Column(children: [
-          const SizedBox(height: 24),
-          Image.asset("assets/images/logo.png", width: screenSizes.width / 1.5),
-          const SizedBox(height: 50),
-          radial()
-        ]))));
+    backgroundColor: SettingsColor.primaryColor,
+      drawer: const DrawerView(),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset("assets/images/logo.png", width: screenSizes.width / 1.5),
+              const SizedBox(height: 50),
+              radial()
+            ]
+          ),
+        ),
+      )
+    );
   }
 
   Widget radial() {

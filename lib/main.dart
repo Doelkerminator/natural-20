@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:natural_20/providers/CharacterNotifier.dart';
 import 'package:natural_20/providers/add_campaign_notifier.dart';
+import 'package:natural_20/providers/add_character_campaign.dart';
 import 'package:natural_20/providers/add_note_notifier.dart';
 import 'package:natural_20/providers/login_notifier.dart';
 import 'package:natural_20/routes/routes.dart';
@@ -17,7 +18,8 @@ void main() async {
       ChangeNotifierProvider(create: (_)=> LoginState()),
       ChangeNotifierProvider(create: (_)=> AddCampaignState()),
       ChangeNotifierProvider(create: (_)=> AddNoteState()),
-      ChangeNotifierProvider(create: (_) => CharacterState())
+      ChangeNotifierProvider(create: (_)=> CharacterState()),
+      ChangeNotifierProvider(create: (_)=> AddCharacterCampaignState())
     ],
     child: const MyApp(),
   ));

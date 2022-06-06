@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:natural_20/models/campaign_model.dart';
 import 'package:natural_20/settings/SettingsButtons.dart';
+import 'package:natural_20/settings/settings_color.dart';
 import 'package:provider/provider.dart';
 import '../database/database_firestore.dart';
 import '../providers/add_campaign_notifier.dart';
@@ -36,7 +37,10 @@ class _FormCampaignState extends State<FormCampaign> {
 
   @override
   Widget build(BuildContext context) {
-    return formAddCampaign();
+    return Container(
+      color: SettingsColor.primaryColor,
+      child: formAddCampaign(),
+    );
   }
 
   Widget formAddCampaign() {
@@ -53,7 +57,10 @@ class _FormCampaignState extends State<FormCampaign> {
                 txtFormFieldDetailsCampaign(),
                 const SizedBox(height: 20),
                 image(),
-                Text(context.watch<AddCampaignState>().imageStatus),
+                Text(
+                  context.watch<AddCampaignState>().imageStatus,
+                  style: TextStyle(color: SettingsColor.textColor),
+                ),
                 const SizedBox(height: 20),
                 ElevatedButton(
                     style: SettingsButtons.buttonStyle1(),
@@ -62,61 +69,68 @@ class _FormCampaignState extends State<FormCampaign> {
                 Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
                     child: context.watch<AddCampaignState>().isNotLoading
-                        ? Column(
-                          children: [
+                        ? Column(children: [
                             ElevatedButton(
-                                onPressed: () async {
-                                  principal:
-                                  if (_formKey.currentState!.validate()) {
-                                    if (widget.objCampaig == null) {
-                                      if (pickedFile != null) {
-                                        if (pickedFile!.extension != "png" &&
-                                            pickedFile!.extension != "jpg" && pickedFile!.extension != "jpeg") {
-                                          context
-                                              .read<AddCampaignState>()
-                                              .imageStatusTypeNotCorrect();
-                                          break principal;
-                                        } else {
-                                          await process();
-                                          break principal;
-                                        }
+                              onPressed: () async {
+                                principal:
+                                if (_formKey.currentState!.validate()) {
+                                  if (widget.objCampaig == null) {
+                                    if (pickedFile != null) {
+                                      if (pickedFile!.extension != "png" &&
+                                          pickedFile!.extension != "jpg" &&
+                                          pickedFile!.extension != "jpeg") {
+                                        context
+                                            .read<AddCampaignState>()
+                                            .imageStatusTypeNotCorrect();
+                                        break principal;
+                                      } else {
+                                        await process();
+                                        break principal;
                                       }
-                                      await process();
+                                    }
+                                    await process();
+                                  } else {
+                                    if (pickedFile != null) {
+                                      if (pickedFile!.extension != "png" &&
+                                          pickedFile!.extension != "jpg" &&
+                                          pickedFile!.extension != "jpeg") {
+                                        context
+                                            .read<AddCampaignState>()
+                                            .imageStatusTypeNotCorrect();
+                                        break principal;
+                                      } else {
+                                        await process();
+                                        break principal;
+                                      }
                                     } else {
-                                      if (pickedFile != null) {
-                                        if (pickedFile!.extension != "png" &&
-                                            pickedFile!.extension != "jpg" && pickedFile!.extension != "jpeg") {
-                                          context
-                                          .read<AddCampaignState>()
-                                          .imageStatusTypeNotCorrect();
-                                          break principal;
-                                        } else {
-                                          await process();
-                                          break principal;
-                                        }
-                                      } else {await process();}
+                                      await process();
                                     }
                                   }
-                                },
-                                child: const Text('Enviar'),
-                                style: SettingsButtons.buttonStyle1(),
-                              ),
-                              const SizedBox(height: 10),
-                              widget.objCampaig != null ? ElevatedButton(
-                    onPressed:(){
-                       delete();
-                    },
-                    child: const Text("Borrar partida"), style: SettingsButtons.buttonStyle1(),): Container()
-                          ]
-                          
-                        )
+                                }
+                              },
+                              child: const Text('Enviar'),
+                              style: SettingsButtons.buttonStyle1(),
+                            ),
+                            const SizedBox(height: 10),
+                            widget.objCampaig != null
+                                ? ElevatedButton(
+                                    onPressed: () {
+                                      delete();
+                                    },
+                                    child: const Text("Borrar partida"),
+                                    style: SettingsButtons.buttonStyle1(),
+                                  )
+                                : Container()
+                          ])
                         : Center(
                             child: Column(
                             children: [
                               const CircularProgressIndicator(),
                               const SizedBox(height: 5),
                               Text(
-                                  context.watch<AddCampaignState>().loadMessage)
+                                  context.watch<AddCampaignState>().loadMessage,
+                                  style:
+                                      TextStyle(color: SettingsColor.textColor))
                             ],
                           ))),
                 const SizedBox(height: 5),
@@ -161,7 +175,9 @@ class _FormCampaignState extends State<FormCampaign> {
     setState(() {
       pickedFile = result.files.first;
     });
-    if (pickedFile!.extension != "png" && pickedFile!.extension != "jpg" && pickedFile!.extension != "jpeg")  {
+    if (pickedFile!.extension != "png" &&
+        pickedFile!.extension != "jpg" &&
+        pickedFile!.extension != "jpeg") {
       context.read<AddCampaignState>().imageStatusTypeNotCorrect();
     } else {
       context.read<AddCampaignState>().imageStatusSelected();
@@ -170,7 +186,9 @@ class _FormCampaignState extends State<FormCampaign> {
 
   Future<String> uploadImage() async {
     if (pickedFile == null ||
-        (pickedFile?.extension != "png" && pickedFile?.extension != "jpg" && pickedFile!.extension != "jpeg")) {
+        (pickedFile?.extension != "png" &&
+            pickedFile?.extension != "jpg" &&
+            pickedFile!.extension != "jpeg")) {
       return "Not Image";
     } else {
       final path = 'imagesCampaign/${pickedFile?.name}';
@@ -236,7 +254,13 @@ class _FormCampaignState extends State<FormCampaign> {
       DatabaseFirestore.createCampaign(
           urlImage, txtNameController.text, txtDetailsController.text);
     } else {
-      DatabaseFirestore.updateCampaign(widget.objCampaig?.id, urlImage, txtNameController.text, txtDetailsController.text);
+      if (widget.objCampaig != null) {
+        if (widget.objCampaig?.imagen != "" && pickedFile?.name == null) {
+          urlImage = widget.objCampaig?.imagen;
+        }
+      }
+      DatabaseFirestore.updateCampaign(widget.objCampaig?.id, urlImage,
+          txtNameController.text, txtDetailsController.text);
     }
   }
 
@@ -274,7 +298,9 @@ class _FormCampaignState extends State<FormCampaign> {
     if (widget.objCampaig == null) {
       if (pickedFile?.name == null ||
           pickedFile?.name == "Not Image" ||
-          (pickedFile!.extension != "png" && pickedFile!.extension != "jpg" && pickedFile!.extension != "jpeg")) {
+          (pickedFile!.extension != "png" &&
+              pickedFile!.extension != "jpg" &&
+              pickedFile!.extension != "jpeg")) {
         return Image.asset("assets/images/not-available_campaign.png");
       } else {
         return imageSelected();
@@ -285,12 +311,16 @@ class _FormCampaignState extends State<FormCampaign> {
       } else if (widget.objCampaig!.imagen! != "" && pickedFile?.name == null) {
         context.watch<AddCampaignState>().imageStatusSelected();
         return Image.network(widget.objCampaig!.imagen!);
-      } else if (
-          pickedFile?.name != null && (pickedFile!.extension == "png" || pickedFile!.extension == "jpg" || pickedFile!.extension == "jpeg")){
+      } else if (pickedFile?.name != null &&
+          (pickedFile!.extension == "png" ||
+              pickedFile!.extension == "jpg" ||
+              pickedFile!.extension == "jpeg")) {
         context.watch<AddCampaignState>().imageStatusSelected();
         return imageSelected();
-      } else if(pickedFile?.name != null &&
-          (pickedFile!.extension != "png" && pickedFile!.extension != "jpg" && pickedFile!.extension != "jpeg")){
+      } else if (pickedFile?.name != null &&
+          (pickedFile!.extension != "png" &&
+              pickedFile!.extension != "jpg" &&
+              pickedFile!.extension != "jpeg")) {
         context.watch<AddCampaignState>().imageStatusTypeNotCorrect();
         return Image.asset("assets/images/not-available_campaign.png");
       }

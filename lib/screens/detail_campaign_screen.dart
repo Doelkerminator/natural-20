@@ -3,6 +3,7 @@ import 'package:natural_20/models/campaign_model.dart';
 import 'package:natural_20/providers/add_note_notifier.dart';
 import 'package:natural_20/views/form_campaign_view.dart';
 import 'package:natural_20/views/form_note_view.dart';
+import 'package:natural_20/views/list_characters_by_campaign.dart';
 import 'package:natural_20/views/list_notes_view.dart';
 import 'package:provider/provider.dart';
 import '../settings/settings_color.dart';
@@ -49,13 +50,12 @@ class _DetailCampaignState extends State<DetailCampaign>
           ),
         ),
         SliverFillRemaining(
-          // contenido suplementario restante TabBarView
           child: TabBarView(
             controller: tabController,
             children: <Widget>[
               Center(child: detalles(campaign)),
               notas(campaign['id']),
-              Center(child: Text('el')),
+              characters(campaign['id']),
             ],
           ),
         ),
@@ -70,17 +70,28 @@ class _DetailCampaignState extends State<DetailCampaign>
       elevation: 0,
       expandedHeight: MediaQuery.of(context).size.height / 2.2,
       leading: IconButton(
-          onPressed: () {
-            context.read<AddNoteState>().changeStateToList();
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back, color: SettingsColor.textColor)),
+        onPressed: () {
+          context.read<AddNoteState>().changeStateToList();
+          Navigator.pop(context);
+        },
+        icon: Icon(Icons.arrow_back, color: SettingsColor.textColor)),
       flexibleSpace: FlexibleSpaceBar(
-          title: Text("${camp['name']}"),
-          background: camp['image'] != ""
-              ? Image.network("${camp['image']}", fit: BoxFit.cover)
-              : Image.asset('assets/not-available_campaign.png',
-                  fit: BoxFit.cover)),
+        title: Text("${camp['name']}"),
+        background: Opacity(
+          opacity: 0.7,
+          child: Container(
+            color: Colors.black,
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: camp['image'] != "" ? NetworkImage("${camp['image']}") : AssetImage('assets/images/not-available_campaign.png') as ImageProvider,
+                  fit: BoxFit.cover
+                )
+              ),
+            )
+          ),
+        )
+      ),
     );
   }
 
@@ -102,8 +113,8 @@ class _DetailCampaignState extends State<DetailCampaign>
     return not;
   }
 
-  Widget characters(Map<String, dynamic> camp) {
-    return ListView.builder(itemBuilder: camp['personajes']);
+  Widget characters(String id) {
+    return ListCharactersByCampaign(idCampaign: id);
   }
 }
 

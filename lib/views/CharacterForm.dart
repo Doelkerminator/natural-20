@@ -7,6 +7,7 @@ import 'package:crypto/crypto.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/services.dart';
 import 'package:natural_20/settings/SettingsButtons.dart';
 import 'package:natural_20/settings/settings_form.dart';
 import 'package:provider/provider.dart';
@@ -118,6 +119,9 @@ class _CharacterForm extends State<CharacterForm> {
                                 height: MediaQuery.of(context).size.height/18,
                                 width: MediaQuery.of(context).size.width*3/8,
                                 child: TextFormField(
+                                    inputFormatters: <TextInputFormatter>[
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
                                     keyboardType: TextInputType.number,
                                     controller: txtLvl,
                                     style: const TextStyle(color: Colors.white),
@@ -208,6 +212,9 @@ class _CharacterForm extends State<CharacterForm> {
                                     height: MediaQuery.of(context).size.height/12,
                                     width: MediaQuery.of(context).size.width/5,
                                     child: TextFormField(
+                                        inputFormatters: <TextInputFormatter>[
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
                                         keyboardType: TextInputType.number,
                                         controller: txtSTR,
                                         style: const TextStyle(color: Colors.white),
@@ -227,6 +234,9 @@ class _CharacterForm extends State<CharacterForm> {
                                     height: MediaQuery.of(context).size.height/12,
                                     width: MediaQuery.of(context).size.width/5,
                                     child: TextFormField(
+                                      inputFormatters: <TextInputFormatter>[
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
                                         keyboardType: TextInputType.number,
                                         controller: txtDEX,
                                         style: const TextStyle(color: Colors.white),
@@ -246,6 +256,9 @@ class _CharacterForm extends State<CharacterForm> {
                                     height: MediaQuery.of(context).size.height/12,
                                     width: MediaQuery.of(context).size.width/5,
                                     child: TextFormField(
+                                      inputFormatters: <TextInputFormatter>[
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
                                         keyboardType: TextInputType.number,
                                         controller: txtCON,
                                         style: const TextStyle(color: Colors.white),
@@ -270,6 +283,9 @@ class _CharacterForm extends State<CharacterForm> {
                                     height: MediaQuery.of(context).size.height/12,
                                     width: MediaQuery.of(context).size.width/5,
                                     child: TextFormField(
+                                      inputFormatters: <TextInputFormatter>[
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
                                         keyboardType: TextInputType.number,
                                         controller: txtINT,
                                         style: const TextStyle(color: Colors.white),
@@ -289,6 +305,9 @@ class _CharacterForm extends State<CharacterForm> {
                                     height: MediaQuery.of(context).size.height/12,
                                     width: MediaQuery.of(context).size.width/5,
                                     child: TextFormField(
+                                      inputFormatters: <TextInputFormatter>[
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
                                         keyboardType: TextInputType.number,
                                         controller: txtWIS,
                                         style: const TextStyle(color: Colors.white),
@@ -308,6 +327,9 @@ class _CharacterForm extends State<CharacterForm> {
                                     height: MediaQuery.of(context).size.height/12,
                                     width: MediaQuery.of(context).size.width/5,
                                     child: TextFormField(
+                                      inputFormatters: <TextInputFormatter>[
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
                                         keyboardType: TextInputType.number,
                                         controller: txtCHR,
                                         style: const TextStyle(color: Colors.white),
@@ -378,7 +400,7 @@ class _CharacterForm extends State<CharacterForm> {
   Future upload() async {
     User? user = FirebaseAuth.instance.currentUser;
     Character character = Character(
-      uid: sha1.convert(utf8.encode(txtName.text + txtRace.text + txtClass.text + user!.uid)).toString(),
+      uid: md5.convert(utf8.encode(txtName.text + txtRace.text + txtClass.text + user!.uid)).toString(),
       name: txtName.text,
       level: int.parse(txtLvl.text),
       classe: txtClass.text,

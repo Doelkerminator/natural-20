@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:natural_20/database/database_firestore.dart';
 import 'package:natural_20/models/campaign_model.dart';
+import 'package:natural_20/providers/add_campaign_notifier.dart';
 import 'package:natural_20/settings/settings_color.dart';
 import 'package:natural_20/views/card_campaign.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/add_note_notifier.dart';
 
 class CampaignScreen extends StatefulWidget {
   const CampaignScreen({Key? key}) : super(key: key);
@@ -55,7 +59,32 @@ class _CampaignScreenState extends State<CampaignScreen>
             sliverHeader()
           ];
         },
-        body: bodyCampaigns,
+        body: Stack(
+          children: [
+            bodyCampaigns,
+            circularButton()
+          ],
+        )
+      )
+    );
+  }
+
+  Widget circularButton(){
+    return Align(
+      alignment: Alignment.bottomLeft,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 0, 20, 20),
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pushNamed(context, '/add_campaign');
+          },
+          child: const Icon(Icons.add, color: Colors.white),
+          style: ElevatedButton.styleFrom(
+            fixedSize: const Size(60,60),
+            shape: const CircleBorder(),
+            primary: SettingsColor.tertiaryColor
+          ),
+        )
       )
     );
   }
@@ -88,13 +117,6 @@ class _CampaignScreenState extends State<CampaignScreen>
             Navigator.pop(context);
           },
           icon: Icon(Icons.arrow_back, color: SettingsColor.textColor)),
-      actions: [
-        IconButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/add_campaign');
-          },
-          icon: Icon(Icons.add, color: SettingsColor.textColor))
-      ],
       flexibleSpace: FlexibleSpaceBar(
           title: const Text('Campañas'),
           background:

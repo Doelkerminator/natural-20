@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:intl/intl.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:natural_20/models/campaign_model.dart';
@@ -92,72 +91,95 @@ class DatabaseFirestore {
     });
   }
 
-  static Future<void> createNote(String? idCamp, String title, String desc) async {
+  static Future<void> createNote(
+      String? idCamp, String title, String desc) async {
     await FirebaseFirestore.instance
         .collection('campania')
         .where('id', isEqualTo: idCamp)
         .get()
         .then((value) {
-          value.docs.forEach((element) {
-            var bytes1 = utf8.encode(title);
-            Random random = Random();
-            int randomNumber = random.nextInt(999);
-            String id = md5.convert(bytes1).toString() + randomNumber.toString();
-            String date = DateFormat('yyyy-MM-dd hh:mm:ss').format(DateTime.now());
-            Note nota = Note(
-              id: id,
-              titulo: title,
-              dscNota: desc,
-              fecha: date
-            );
-            FirebaseFirestore.instance
-                .collection('campania')
-                .doc(element.id)
-                .collection("notas")
-                .add(nota.toMap());
-          });
+      value.docs.forEach((element) {
+        var bytes1 = utf8.encode(title);
+        Random random = Random();
+        int randomNumber = random.nextInt(999);
+        String id = md5.convert(bytes1).toString() + randomNumber.toString();
+        String date = DateFormat('yyyy-MM-dd hh:mm:ss').format(DateTime.now());
+        Note nota = Note(id: id, titulo: title, dscNota: desc, fecha: date);
+        FirebaseFirestore.instance
+            .collection('campania')
+            .doc(element.id)
+            .collection("notas")
+            .add(nota.toMap());
+      });
     });
   }
 
-  static Future<void> updateNote(String? idCamp, String? idNote, String title, String desc) async {
+  static Future<void> updateNote(
+      String? idCamp, String? idNote, String title, String desc) async {
     await FirebaseFirestore.instance
         .collection('campania')
         .where('id', isEqualTo: idCamp)
         .get()
         .then((value) {
-          value.docs.forEach((element) async {
-            final post = await FirebaseFirestore.instance
-                .collection('campania')
-                .doc(element.id)
-                .collection("notas")
-                .where("id", isEqualTo: idNote)
-                .limit(1)
-                .get()
-                .then((QuerySnapshot snapshot) {
-                  return snapshot.docs[0].reference;
-              });
-            var batch = FirebaseFirestore.instance.batch();
-            batch.update(post,
-                ({'titulo': title, 'dscNota': desc}));
-            batch.commit();  
-          });
+      value.docs.forEach((element) async {
+        final post = await FirebaseFirestore.instance
+            .collection('campania')
+            .doc(element.id)
+            .collection("notas")
+            .where("id", isEqualTo: idNote)
+            .limit(1)
+            .get()
+            .then((QuerySnapshot snapshot) {
+          return snapshot.docs[0].reference;
+        });
+        var batch = FirebaseFirestore.instance.batch();
+        batch.update(post, ({'titulo': title, 'dscNota': desc}));
+        batch.commit();
+      });
+    });
+  }
+
+  static Future<void> deleteNote(String? idCamp, String? idNote) async {
+    await FirebaseFirestore.instance
+        .collection('campania')
+        .where('id', isEqualTo: idCamp)
+        .limit(1)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) async {
+        final post = await FirebaseFirestore.instance
+            .collection('campania')
+            .doc(element.id)
+            .collection("notas")
+            .where("id", isEqualTo: idNote)
+            .limit(1)
+            .get()
+            .then((QuerySnapshot snapshot) {
+          snapshot.docs[0].reference.delete();
+        });
+      });
     });
   }
 
   static Future<List<Note>> getNotesByCampaign(String? idCamp) async {
     String? idC;
     await FirebaseFirestore.instance
-      .collection('campania')
-      .where('id', isEqualTo: idCamp)
-      .get()
-      .then((value) {
-        for (var element in value.docs) {
-          idC = element.id;
-        }
+        .collection('campania')
+        .where('id', isEqualTo: idCamp)
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        idC = element.id;
+      }
     });
 
     List<Note> dataNotes = [];
-    await FirebaseFirestore.instance.collection("campania").doc(idC).collection("notas").get().then((value) {
+    await FirebaseFirestore.instance
+        .collection("campania")
+        .doc(idC)
+        .collection("notas")
+        .get()
+        .then((value) {
       for (var i in value.docs) {
         dataNotes.add(Note.fromMap(i.data()));
       }
@@ -165,22 +187,125 @@ class DatabaseFirestore {
     return dataNotes;
   }
 
+  static Future<void> addChar(
+      String? nameUser, String? nameChar, String idCamp) async {
+    late Character chara;
+    await FirebaseFirestore.instance
+        .collection('usuarios')
+        .where("name", isEqualTo: nameUser)
+        .limit(1)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        FirebaseFirestore.instance
+            .collection('usuarios')
+            .doc(element.id)
+            .collection("characters")
+            .where("name", isEqualTo: nameChar)
+            .limit(1)
+            .get()
+            .then((QuerySnapshot snapshot) {
+          snapshot.docs[0].reference.get().then((value) async {
+            chara = Character(
+                uid: value.get("uid"),
+                name: value.get("name"),
+                level: value.get("level"),
+                appearance: value.get("physical")['appereance'],
+                playerName: value.get("player_name"));
+            String? idC;
+            await FirebaseFirestore.instance
+                .collection('campania')
+                .where('id', isEqualTo: idCamp)
+                .get()
+                .then((value) {
+              for (var element in value.docs) {
+                idC = element.id;
+              }
+            });
+
+            FirebaseFirestore.instance
+                .collection("campania")
+                .doc(idC)
+                .collection("characters")
+                .add(chara.toMap());
+          });
+        });
+      });
+    });
+  }
+
+  static Future<List<Character>> getCharactersByCampaign(String? idCamp) async {
+    String? idC;
+    await FirebaseFirestore.instance
+        .collection('campania')
+        .where('id', isEqualTo: idCamp)
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        idC = element.id;
+      }
+    });
+
+    List<Character> dataCharacters = [];
+    await FirebaseFirestore.instance
+        .collection("campania")
+        .doc(idC)
+        .collection("characters")
+        .get()
+        .then((value) {
+      for (var i in value.docs) {
+        dataCharacters.add(Character.fromMap(i.data()));
+      }
+    });
+    return dataCharacters;
+  }
+
+  static Future<void> deleteCharacterCampaign(
+      String? idCamp, String? idCharacter) async {
+    await FirebaseFirestore.instance
+        .collection('campania')
+        .where('id', isEqualTo: idCamp)
+        .limit(1)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) async {
+        final post = await FirebaseFirestore.instance
+            .collection('campania')
+            .doc(element.id)
+            .collection("characters")
+            .where("uid", isEqualTo: idCharacter)
+            .limit(1)
+            .get()
+            .then((QuerySnapshot snapshot) {
+          snapshot.docs[0].reference.delete();
+        });
+      });
+    });
+  }
+
   static Future<void> createCharacter(Character character) async {
-    CollectionReference characterRef = FirebaseFirestore.instance.collection('usuarios');
+    CollectionReference characterRef =
+        FirebaseFirestore.instance.collection('usuarios');
     User? user = FirebaseAuth.instance.currentUser;
     print(user!.uid);
     if (user != null) {
-      await characterRef.doc(user.uid).collection('characters').add(character.toMap());
+      await characterRef
+          .doc(user.uid)
+          .collection('characters')
+          .add(character.toMap());
     }
   }
 
   static Future<List<Character>?> getUserCharacters() async {
     User? user = FirebaseAuth.instance.currentUser;
     List<Character> characters = [];
-    CollectionReference characterRef = FirebaseFirestore.instance.collection('usuarios').doc(user!.uid).collection('characters');
+    CollectionReference characterRef = FirebaseFirestore.instance
+        .collection('usuarios')
+        .doc(user!.uid)
+        .collection('characters');
     await characterRef.get().then((value) {
       for (var i in value.docs) {
-        characters.add(Character.fromMap(i.data() as Map));
+        characters.add(Character.fromMap(i.data() as Map<String, dynamic>));
       }
     });
     return characters;
@@ -188,26 +313,35 @@ class DatabaseFirestore {
 
   static Future<Character?> getCharacter(String charId) async {
     User? user = FirebaseAuth.instance.currentUser;
-    CollectionReference characterRef = FirebaseFirestore.instance.collection('usuarios').doc(user!.uid).collection('characters');
+    CollectionReference characterRef = FirebaseFirestore.instance
+        .collection('usuarios')
+        .doc(user!.uid)
+        .collection('characters');
     var characterDoc = await characterRef.doc(charId).get();
-    if(characterDoc.exists) {
-      return Character.fromMap(characterDoc.data() as Map<String,dynamic>);
-    }
-    else {
+    if (characterDoc.exists) {
+      return Character.fromMap(characterDoc.data() as Map<String, dynamic>);
+    } else {
       print('Character $charId was not found in ${user.uid} character list');
       return null;
     }
   }
 
-  static Future<void> updateCharacter(String charId, Character character) async {
+  static Future<void> updateCharacter(
+      String charId, Character character) async {
     User? user = FirebaseAuth.instance.currentUser;
-    CollectionReference characterRef = FirebaseFirestore.instance.collection('usuarios').doc(user!.uid).collection('characters');
+    CollectionReference characterRef = FirebaseFirestore.instance
+        .collection('usuarios')
+        .doc(user!.uid)
+        .collection('characters');
     await characterRef.doc(charId).update(character.toMap());
   }
 
   static Future<void> deleteCharacter(String charId) async {
     User? user = FirebaseAuth.instance.currentUser;
-    CollectionReference characterRef = FirebaseFirestore.instance.collection('usuarios').doc(user!.uid).collection('characters');
+    CollectionReference characterRef = FirebaseFirestore.instance
+        .collection('usuarios')
+        .doc(user!.uid)
+        .collection('characters');
     await characterRef.doc(charId).delete();
   }
 }

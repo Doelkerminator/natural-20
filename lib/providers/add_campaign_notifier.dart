@@ -32,7 +32,7 @@ class AddCampaignState extends ChangeNotifier {
   }
 
   void imageStatusTypeNotCorrect() {
-    _imageStatus = "Solo se pueden seleccionar archivos PBG y JPG";
+    _imageStatus = "Solo se pueden seleccionar archivos PNG y JPG";
     notifyListeners();
   }
 

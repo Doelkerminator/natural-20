@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:natural_20/database/database_firestore.dart';
 import 'package:natural_20/settings/settings_color.dart';
@@ -26,8 +25,8 @@ class _CharacterScreenState extends State<CharacterScreen> {
           if (snapshot.hasError) {
             print(snapshot.error);
             return const Center(
-              child: Text('Ocurrió un error en la solicitud'),<
-            );>
+              child: Text('Ocurrió un error en la solicitud')
+            );
           }
           else {
             if (snapshot.connectionState == ConnectionState.done) {
@@ -89,7 +88,7 @@ class _CharacterScreenState extends State<CharacterScreen> {
             alignment: Alignment.bottomRight,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 20, 20),
-              child:ElevatedButton(
+              child: ElevatedButton(
                 onPressed: () {
                   Navigator.pushNamed(context, '/character_form');
                 },

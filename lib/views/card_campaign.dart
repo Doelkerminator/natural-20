@@ -9,12 +9,10 @@ class CardCampaign extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.black87,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+      color: SettingsColor.secondaryColor,
       margin: const EdgeInsets.all(15),
       elevation: 10,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(30),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
@@ -23,12 +21,12 @@ class CardCampaign extends StatelessWidget {
                 ? NetworkImage('${campaign?.imagen}')
                 : const AssetImage('assets/images/not-available_campaign.png')
                 as ImageProvider,
-              height: 184,  
+              height: MediaQuery.of(context).size.height / 3.5,   
               alignment: Alignment.topCenter,
               fit: BoxFit.fitWidth,
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 20),
+              padding: const EdgeInsets.only(left: 0),
               child: ListTile(
                 title: Text('${campaign?.nombre}', style: TextStyle(color: SettingsColor.textColor)),
                 trailing: IconButton(
@@ -44,8 +42,16 @@ class CardCampaign extends StatelessWidget {
                       "notes": campaign!.notas,
                     });
                   },
-                  icon: const Icon(Icons.chevron_right), color: SettingsColor.textColor),
-              ))
-        ])));
+                  icon: const Icon(Icons.chevron_right), color: SettingsColor.textColor
+                ),
+              )
+            )
+          ]
+        )
+      )
+    );
   }
 }
+
+
+

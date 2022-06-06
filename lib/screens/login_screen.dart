@@ -7,6 +7,8 @@ import 'package:natural_20/providers/login_notifier.dart';
 import 'package:natural_20/screens/menu_screen.dart';
 import 'package:provider/provider.dart';
 
+import '../settings/settings_color.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({ Key? key }) : super(key: key);
 
@@ -20,31 +22,31 @@ class _LoginScreenState extends State<LoginScreen> {
     var screenSizes = MediaQuery.of(context).size;
     Divider _divider = const Divider(height: 10);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Natural 20")
-      ),
-      body: SingleChildScrollView(
-        child: IgnorePointer(
-          ignoring: context.watch<LoginState>().enabledButtons,
-          child: Column(
-            children: [
-              const SizedBox(height: 24),
-              Image.asset("assets/images/logo.png", width: screenSizes.width / 1.5),
-              gAuthButton(),  
-              _divider,
-              fAuthButton(),
-              _divider,
-              tAuthButton(),
-              _divider
-            ]
+      backgroundColor: SettingsColor.primaryColor,
+      body: Center(
+        child: SingleChildScrollView(
+          child: IgnorePointer(
+            ignoring: context.watch<LoginState>().enabledButtons,
+            child: Column(
+              children: [
+                Image.asset("assets/images/logo.png", width: screenSizes.width / 1.5),
+                gAuthButton(),  
+                _divider,
+                fAuthButton(),
+                _divider,
+                tAuthButton(),
+                _divider
+              ]
+            )
           )
-        )
+        ),
       )
     );
   }
 
   Widget gAuthButton(){
     return GoogleAuthButton(
+      darkMode: true,
       isLoading: context.watch<LoginState>().isLoading1,
       onPressed: () async {
         context.read<LoginState>().changeEnabledButtons();
@@ -68,6 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget fAuthButton(){
     return FacebookAuthButton(
+      darkMode: true,
       isLoading: context.watch<LoginState>().isLoading2,
       onPressed: () async {
         context.read<LoginState>().changeEnabledButtons();
@@ -91,6 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget tAuthButton(){
     return TwitterAuthButton(
+      darkMode: true,
       isLoading: context.watch<LoginState>().isLoading3,
       onPressed: () async {
         context.read<LoginState>().changeEnabledButtons();

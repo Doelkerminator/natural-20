@@ -11,7 +11,7 @@ class AddNoteState extends ChangeNotifier {
 
   String get stateNotes => _stateNotes;
   bool get isNotLoading => _isNotLoading;
-  bool get isEnabled => _isNotEnabled;
+  bool get isNotEnabled => _isNotEnabled;
   String get loadMessage => _loadMessage;
   String get imageStatus => _imageStatus;
   Note? get noteE => _noteE;
@@ -50,6 +50,22 @@ class AddNoteState extends ChangeNotifier {
     _imageStatus = "Ninguna Imagen Seleccionada";
     notifyListeners();
   }
+
+
+
+  void imageStatusTypeNotCorrectNotLoad() {
+    _imageStatus = "Solo se pueden seleccionar archivos PBG y JPG";
+  }
+
+  void imageStatusSelectedNotLoad() {
+    _imageStatus = "Imagen seleccionada";
+  }
+
+  void imageStatusNoSelectedNotLoad() {
+    _imageStatus = "Ninguna Imagen Seleccionada";
+  }
+
+
 
   void loadMessageDelete() {
     _loadMessage = "Eliminando";
